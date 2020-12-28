@@ -1,0 +1,48 @@
+﻿@model CompanyManagement.Models.Productx
+
+@{
+    ViewBag.Title = "التفاصيل";
+}
+
+<h2>التفاصيل عن المنتج "@Html.DisplayFor(p => p.name)"</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.code)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.vat)
+        </dt>
+
+        <dd>
+            @if (Model.vat == null)
+            {
+                <span>لا يوجد</span>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.vat)
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("الرجوع الى القائمة", "Index")
+</p>
+

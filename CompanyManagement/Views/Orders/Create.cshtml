@@ -1,0 +1,137 @@
+﻿@model CompanyManagement.Models.OrderViewModel
+@{
+    ViewBag.Title = "فاتورة جديدة";
+}
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<style>
+    .orderfieldset {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #cccccc;
+        background-color: #fff;
+        border-radius: 5px;
+    }
+</style>
+<h2>فاتورة جديدة</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <fieldset class="orderfieldset">
+        @*<legend>الفاتورة</legend>*@
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Order.custom_order_id, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Order.custom_order_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Order.custom_order_id, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Order.customer_id, htmlAttributes: new { @class = "control-label" })
+                    <select name="customer_id" class="form-control">
+                        <option value="" selected hidden>-- اختار العميل</option>
+                        @foreach (var client in Model.Customers)
+                        {
+                            <option value="@client.id">@client.name</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(model => model.Order.customer_id, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    <label for="orderkind">نوع الفاتورة</label>
+                    <select name="sell_or_buy" id="orderkind" class="form-control">
+                        <option value="" hidden selected>-- اختار نوع الفاتورة</option>
+                        <option value="@Model.OrderType[0]">@Model.OrderType[0]</option>
+                        <option value="@Model.OrderType[1]">@Model.OrderType[1]</option>
+                    </select>
+                    @Html.ValidationMessageFor(model => model.Order.order_type, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="orderfieldset">
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="form-group">
+                    <label for="product_id" class="control-label">المنتج</label>
+                    <select name="product_id" id="product_id" class="form-control">
+                        <option value="" selected hidden>-- اختار المنتج</option>
+                        @foreach (var item in Model.Products)
+                        {
+                            <option value="@item.id">@item.name</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(model => model.OrderDetail.product_id, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.unit_price, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.unit_price, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.unit_price, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.quantity, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.quantity, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.quantity, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.discount, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.discount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.discount, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.total_price, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.total_price, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.total_price, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    <button class="btn btn-success" style="margin-top:31px">إضافة الى الفاتورة</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>  
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#product_id').on('change', function () {
+            var productId = $("#product_id").val();
+            GetPriceOfProduct(productId);
+        });
+    });
+
+    function GetPriceOfProduct(productId) {
+        $.ajax({
+            async: true,
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/Orders/GetProductPrice",
+            data: { productId: productId },
+            success: function (data) {
+                $("#OrderDetail_unit_price").val(parseFloat(data).toFixed(2));
+            },
+            error: function () {
+                alert("يوجد مشكلة فى هذا المنتج")
+            },
+        });
+    }
+</script>

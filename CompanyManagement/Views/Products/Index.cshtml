@@ -1,0 +1,71 @@
+﻿@model IEnumerable<CompanyManagement.Models.Product>
+
+@{
+    ViewBag.Title = "المنتجات";
+}
+
+<h2>المنتجات</h2>
+
+<div id="Search">
+    @using (Ajax.BeginForm("SearchProduct", "Products", new AjaxOptions()
+    {
+        UpdateTargetId = "ContentGrid",
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace
+    }, new { @style = "display:inline" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="input-group mb-3">
+            <input type="text" class="form-control SearchInput" name="ProductName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+            <a href="/Products/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة منتج</a>
+        </div>
+    }
+</div>
+<div id="ContentGrid" style="overflow-x:scroll">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.vat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.code)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.name)
+        </td>
+        <td>
+            @if (item.vat == null)
+            {
+                <span>ــ</span>
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => item.vat)
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.code)
+        </td>
+        <td>
+            @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
+            @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
+            @Html.ActionLink("حذف", "Delete", new { id = item.id })
+        </td>
+
+    </tr>
+        }
+
+    </table>
+</div>

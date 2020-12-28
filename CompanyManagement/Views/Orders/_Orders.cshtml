@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CompanyManagement.Models.Order>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.custom_order_id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.sell_or_buy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.total_payment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.payment_amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.rest_amount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.cancelled)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.order_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer.name)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.custom_order_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sell_or_buy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total_payment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payment_amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.rest_amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cancelled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.order_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.name)
+            </td>
+            <td>
+                @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
+                @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
+                @Html.ActionLink("حذف", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

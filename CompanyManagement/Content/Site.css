@@ -1,0 +1,119 @@
+﻿body {
+    margin:0px;
+    padding:0px;
+    font-family:'Arial Unicode MS'
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* --------------------- CUSTOM LAYOUT ---------------------- */
+
+#custbody {
+    margin: 0px;
+    text-align:right
+}
+#content, #custnav {
+    direction: rtl
+}
+
+/* Sidebar of Layout */
+#custnav{
+    background-color:#3c0055;
+    color:#fff;
+    padding: 0px;
+    height: 100%;
+    position:fixed;
+    right:0;
+    font-size:20px;
+}
+.ly_title {
+    text-align: center;
+    font-size: 46px;
+    height: 100px;
+    background-color: #170021;
+    padding-top:15px
+}
+
+.listnav a{
+    padding: 4px 15px;
+    color:#fff;
+    text-decoration: none;
+    display:block;
+    border-bottom:1px solid #4a1b5e
+}
+.listnav a:hover {
+    background-color: #5a0081;
+}
+.listnav li{
+    font-size: 17px;
+}
+.logout{
+    width:inherit;
+    position:absolute;
+    bottom:0;
+    background-color:aqua
+}
+.logout form{
+    width:100%;
+    background-color:blueviolet
+}
+.logout button{
+    width:100%;
+    border-radius:0px;
+    text-align:center
+}
+
+/* Content of Layout */
+#content {
+    background-color: #fafafa;
+    padding: 15px;
+    height: 100%;
+    position: fixed;
+    overflow-y: scroll;
+    left: 0;
+    float: right
+}
+.CreateButton {
+    background-color: #3c0055;
+    color:white;
+}
+.DeleteButton {
+    background-color: #c60000;
+    color: white;
+}
+.CreateButton:hover {
+    background-color: #5a0081;
+    color:#fff;
+}
+.DeleteButton:hover {
+    background-color: #ff1313;
+    color:#fff;
+}
+
+/* search div*/
+#Search{
+    margin-bottom: 25px;
+}
+
+#AddNew{
+    font-size:15px;
+    margin-right:20px
+}

@@ -1,0 +1,48 @@
+﻿@model CompanyManagement.Models.Customer
+
+@{
+    ViewBag.Title = "التفاصيل";
+}
+
+<h2>تفاصيل عن المورد "@Html.DisplayFor(c => c.name)"</h2>
+<hr />
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.phone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.client)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.client)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("الرجوع الى القائمة", "Index")
+</p>

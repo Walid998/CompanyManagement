@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="row" id="custbody">
+        @* =================== Side Bar ====================== *@
+        <div class="col-sm-2" id="custnav">
+            <div class="ly_title">
+                 <i class="fa fa-bell"></i>
+            </div>
+            
+            <div class="listnav">
+                <a href="/Orders/Index">الفواتير</a>
+                @*<a href="#OrderSubmenu" data-toggle="collapse" aria-expanded="false">الفواتير <i class="fa fa-sort-down" style="margin-right:10px"></i></a>
+                <ul class="list-unstyled collapse" id="OrderSubmenu">
+                    <li><a href="#"><i class="fa fa-angle-double-left"></i> فاتورة جديدة</a></li>
+                    <li><a href="#"><i class="fa fa-angle-double-left"></i>  عرض الفواتير</a></li>
+                </ul>*@
+                <a href="/Customers/Index">العملاء</a>
+                @*<a href="#ClientSubmenu" data-toggle="collapse" aria-expanded="false">العملاء <i class="fa fa-sort-down" style="margin-right:10px"></i></a>
+                <ul class="list-unstyled collapse" id="ClientSubmenu">
+                    <li><a href="/Customers/Create"><i class="fa fa-angle-double-left"></i>  عميل جديد</a></li>
+                    <li><a href="/Customers/Index"><i class="fa fa-angle-double-left"></i>  عرض العملاء</a></li>
+                </ul>*@
+                <a href="#">المخزون</a>
+                <a href="/Products/Index">المنتجات</a>
+            </div>
+            <div class="logout">
+                @using (Html.BeginForm("", "")) {
+                    @Html.AntiForgeryToken()
+                        @*<input type = "submit" value = "Logout" class="btn btn-info"/>*@
+                    <button type = "submit" class="btn btn-info">تسجيل الخروج</button>
+                }
+            </div>
+        </div>
+        @* =================== Content ======================= *@
+        <div class="col-sm-10" id="content">
+
+            @RenderBody()
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).on("resize load", function () {
+                if ($(window).width() <= 633) {
+                    $("#custnav").css({ "position": "unset", "right": "unset" });
+                    $("#content").css({ "position": "unset", "left": "unset", "overflow-y": "unset" });
+                    $(".logout").css({ "position": "unset","bottom":"unset" });
+                    console.log("Smaller");
+                }
+                else if ($(window).width() > 633) {
+                    console.log("Greater");
+                    $("#custnav").css({ "position": "fixed", "right": "0"});
+                    $("#content").css({ "position": "fixed", "left": "0", "overflow-y": "scroll" });
+                    $(".logout").css({ "position": "absolute", "bottom": "0" });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

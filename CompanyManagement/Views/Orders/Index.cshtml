@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CompanyManagement.Models.Order>
+
+@{
+    ViewBag.Title = "الفواتير";
+}
+
+<h2>الفواتير</h2>
+
+<div id="Search">
+    @using (Ajax.BeginForm("SearchOrder", "Orders", new AjaxOptions()
+    {
+        UpdateTargetId = "ContentGrid",
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace
+    }, new { @style = "display:inline" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="input-group mb-3">
+            <input type="text" class="form-control SearchInput" name="OrderID" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+            <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
+            </div>
+            <a href="/Orders/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> فاتورة جديدة</a>
+        </div>
+    }
+</div>
+<div id="ContentGrid" style="overflow-x:scroll">
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.custom_order_id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sell_or_buy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.total_payment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.payment_amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.rest_amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.cancelled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.order_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer.name)
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.custom_order_id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sell_or_buy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.total_payment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.payment_amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.rest_amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.cancelled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.order_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.name)
+            </td>
+            <td>
+                @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
+                @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
+                @Html.ActionLink("حذف", "Delete", new { id = item.id })
+            </td>
+        </tr>
+    }
+
+    </table>
+</div>

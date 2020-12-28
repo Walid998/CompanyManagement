@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="7c62137eaa00425d825861e5fbee33c7" Name="Diagram1" ZoomLevel="94">
+        <EntityTypeShape EntityType="CompanyManagmentModel.Customer" Width="1.5" PointX="5.75" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.OrderDetail" Width="1.5" PointX="3" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Order" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Product" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Stock" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__order__1920BF5C" ManuallyRouted="false" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__produ__182C9B23" ManuallyRouted="false" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__Stock__product_i__1273C1CD" ManuallyRouted="false" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__Orders__customer__34C8D9D1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
