@@ -130,5 +130,18 @@ namespace CompanyManagement.Controllers
             }
             base.Dispose(disposing);
         }
+
+        // ============================================
+        public ActionResult AllProducts()
+        {
+            var products = db.Products.ToList();
+            Dictionary<string, List<Stock>> allProducts = new Dictionary<string, List<Stock>>();
+            foreach(var item in products)
+            {
+                var assocOrders = db.Stocks.Where(o => o.product_id == item.id).OrderBy(o => o.date_of_buy);
+                allProducts[item.name] = assocOrders.ToList();
+            }
+            return View(allProducts);
+        }
     }
 }

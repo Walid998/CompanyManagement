@@ -231,6 +231,9 @@
     <Content Include="Models\CompanyManagementModel.edmx.diagram">
       <DependentUpon>CompanyManagementModel.edmx</DependentUpon>
     </Content>
+    <Content Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -356,6 +359,8 @@
     <Content Include="Views\Orders\_Orders.cshtml" />
     <Content Include="Views\Orders\Create.cshtml" />
     <Content Include="Views\OrderDetails\_Index.cshtml" />
+    <Content Include="Views\Orders\Details.cshtml" />
+    <Content Include="Views\Products\AllProducts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

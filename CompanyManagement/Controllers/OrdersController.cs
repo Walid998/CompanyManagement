@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using CompanyManagement.Models;
@@ -12,7 +13,7 @@ namespace CompanyManagement.Controllers
         // GET: Orders
         public ActionResult Index()
         {
-            return View(db.Orders.ToList());
+            return View(db.Orders.OrderByDescending(o => o.order_date).ToList());
         }
         // GET: SearchOrders
         public PartialViewResult SearchOrder(string OrderID)
@@ -22,8 +23,32 @@ namespace CompanyManagement.Controllers
         }
         public JsonResult GetProductPrice(int productId)
         {
-            var unit_price = db.Stocks.OrderBy(s => s.date_of_buy).Single(s => s.product_id == productId).unit_price;
-            return Json(unit_price,JsonRequestBehavior.AllowGet);
+            try
+            {
+                var product = db.Stocks.OrderBy(s => s.date_of_buy).First(s => s.product_id == productId && s.quantity > 0);
+                Object[] product_data = new Object[] {product.unit_price,product.quantity };
+                return Json(product_data, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception e)
+            {
+                return null;
+            } 
+        }
+        public JsonResult IsOrderIdFounded(string orderId)
+        {
+            bool founded = false;
+            try
+            {
+                var order = db.Orders.First(o => o.custom_order_id == orderId);
+                if (order != null)
+                    founded = true;
+            }
+            catch
+            {
+
+            }
+            
+            return Json(founded,JsonRequestBehavior.AllowGet);
         }
 
         // GET: Create
@@ -39,9 +64,20 @@ namespace CompanyManagement.Controllers
         }
 
         // GET: Details
-        public ActionResult Details(int? id)
+        public ActionResult Details(string id)
         {
-            return View();
+            var order = db.Orders.Find(id);
+            if (order != null)
+            {
+                OrderViewModel orderView = new OrderViewModel()
+                {
+                    Order = order,
+                    OrderDetails = db.OrderDetails.Where(o => o.order_id == id).ToList(),
+                };
+                return View(orderView);
+            }
+            else
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest); 
         }
 
         // GET: Edit
@@ -54,6 +90,13 @@ namespace CompanyManagement.Controllers
         public ActionResult Delete(int? id)
         {
             return View();
+        }
+        [HttpPost]
+        public JsonResult CreateOrder(Order order)
+        {
+            OrderViewModel orderViewModel = new OrderViewModel();
+            orderViewModel.AddOrder(order);
+            return Json("تم حفظ الفاتورة بنجاح !!", JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -19,28 +19,28 @@
           <Key>
             <PropertyRef Name="order_details_id" />
           </Key>
-          <Property Name="order_details_id" Type="int" Nullable="false" />
-          <Property Name="order_id" Type="int" />
+          <Property Name="order_details_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_id" Type="nvarchar" MaxLength="30" />
           <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="unit_price" Type="decimal" Precision="18" Scale="2" />
           <Property Name="quantity" Type="int" />
           <Property Name="discount" Type="float" />
-          <Property Name="order_data" Type="datetime" />
-          <Property Name="unit_price" Type="decimal" Precision="18" Scale="2" />
           <Property Name="total_price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="order_data" Type="datetime" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="custom_order_id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="custom_order_id" Type="nvarchar" MaxLength="20" />
+          <Property Name="custom_order_id" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="customer_id" Type="int" Nullable="false" />
-          <Property Name="cancelled" Type="bit" />
-          <Property Name="order_date" Type="datetime" />
+          <Property Name="order_type" Type="nvarchar" MaxLength="4" />
           <Property Name="total_payment" Type="decimal" Precision="18" Scale="2" />
           <Property Name="payment_amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="rest_amount" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="order_type" Type="nvarchar" MaxLength="4" />
+          <Property Name="cancelled" Type="bit" />
+          <Property Name="order_date" Type="datetime" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -62,19 +62,19 @@
           <Property Name="unit_price" Type="decimal" Precision="18" Scale="2" />
           <Property Name="total_price" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
-        <Association Name="FK__OrderDeta__order__1920BF5C">
+        <Association Name="FK__OrderDeta__order__656C112C">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
           <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
-              <PropertyRef Name="id" />
+              <PropertyRef Name="custom_order_id" />
             </Principal>
             <Dependent Role="OrderDetails">
               <PropertyRef Name="order_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__OrderDeta__produ__182C9B23">
+        <Association Name="FK__OrderDeta__produ__6477ECF3">
           <End Role="Products" Type="Self.Products" Multiplicity="1" />
           <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
           <ReferentialConstraint>
@@ -86,7 +86,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Orders__customer__34C8D9D1">
+        <Association Name="FK__Orders__customer__5DCAEF64">
           <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
           <ReferentialConstraint>
@@ -116,15 +116,15 @@
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__OrderDeta__order__1920BF5C" Association="Self.FK__OrderDeta__order__1920BF5C">
+          <AssociationSet Name="FK__OrderDeta__order__656C112C" Association="Self.FK__OrderDeta__order__656C112C">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__produ__182C9B23" Association="Self.FK__OrderDeta__produ__182C9B23">
+          <AssociationSet Name="FK__OrderDeta__produ__6477ECF3" Association="Self.FK__OrderDeta__produ__6477ECF3">
             <End Role="Products" EntitySet="Products" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__customer__34C8D9D1" Association="Self.FK__Orders__customer__34C8D9D1">
+          <AssociationSet Name="FK__Orders__customer__5DCAEF64" Association="Self.FK__Orders__customer__5DCAEF64">
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
@@ -146,38 +146,7 @@
           <Property Name="phone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="client" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="CompanyManagmentModel.FK__Orders__customer__34C8D9D1" FromRole="Customer" ToRole="Order" />
-        </EntityType>
-        <EntityType Name="OrderDetail">
-          <Key>
-            <PropertyRef Name="order_details_id" />
-          </Key>
-          <Property Name="order_details_id" Type="Int32" Nullable="false" />
-          <Property Name="order_id" Type="Int32" />
-          <Property Name="product_id" Type="Int32" Nullable="false" />
-          <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="quantity" Type="Int32" />
-          <Property Name="discount" Type="Double" />
-          <Property Name="total_price" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="order_data" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__order__1920BF5C" FromRole="OrderDetails" ToRole="Orders" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__OrderDeta__produ__182C9B23" FromRole="OrderDetails" ToRole="Products" />
-        </EntityType>
-        <EntityType Name="Order">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="custom_order_id" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="customer_id" Type="Int32" Nullable="false" />
-          <Property Name="total_payment" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="payment_amount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="rest_amount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="cancelled" Type="Boolean" />
-          <Property Name="order_date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__order__1920BF5C" FromRole="Orders" ToRole="OrderDetails" />
-          <NavigationProperty Name="Customer" Relationship="CompanyManagmentModel.FK__Orders__customer__34C8D9D1" FromRole="Order" ToRole="Customer" />
-          <Property Name="order_type" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Orders" Relationship="CompanyManagmentModel.FK__Orders__customer__5DCAEF64" FromRole="Customer" ToRole="Order" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -186,9 +155,9 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="vat" Type="Double" />
-          <NavigationProperty Name="OrderDetails" Relationship="Self.FK__OrderDeta__produ__182C9B23" FromRole="Products" ToRole="OrderDetails" />
           <NavigationProperty Name="Stock" Relationship="Self.FK__Stock__product_i__1273C1CD" FromRole="Products" ToRole="Stock" />
           <Property Name="code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderDetails" Relationship="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3" FromRole="Product" ToRole="OrderDetail" />
         </EntityType>
         <EntityType Name="Stock">
           <Key>
@@ -202,30 +171,6 @@
           <NavigationProperty Name="Product" Relationship="Self.FK__Stock__product_i__1273C1CD" FromRole="Stock" ToRole="Products" />
           <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
-        <Association Name="FK__OrderDeta__order__1920BF5C">
-          <End Role="Orders" Type="Self.Order" Multiplicity="0..1" />
-          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Orders">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="OrderDetails">
-              <PropertyRef Name="order_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__OrderDeta__produ__182C9B23">
-          <End Role="Products" Type="Self.Product" Multiplicity="1" />
-          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="OrderDetails">
-              <PropertyRef Name="product_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__Stock__product_i__1273C1CD">
           <End Role="Products" Type="Self.Product" Multiplicity="1" />
           <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
@@ -240,28 +185,44 @@
         </Association>
         <EntityContainer Name="CompanyManagmentEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Customers" EntityType="Self.Customer" />
-          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
-          <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="Products" EntityType="Self.Product" />
           <EntitySet Name="Stocks" EntityType="Self.Stock" />
-          <AssociationSet Name="FK__OrderDeta__order__1920BF5C" Association="Self.FK__OrderDeta__order__1920BF5C">
-            <End Role="Orders" EntitySet="Orders" />
-            <End Role="OrderDetails" EntitySet="OrderDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK__OrderDeta__produ__182C9B23" Association="Self.FK__OrderDeta__produ__182C9B23">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="OrderDetails" EntitySet="OrderDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK__Stock__product_i__1273C1CD" Association="Self.FK__Stock__product_i__1273C1CD">
             <End Role="Products" EntitySet="Products" />
             <End Role="Stock" EntitySet="Stocks" />
           </AssociationSet>
-          <AssociationSet Name="FK__Orders__customer__34C8D9D1" Association="CompanyManagmentModel.FK__Orders__customer__34C8D9D1">
+          <EntitySet Name="Orders" EntityType="CompanyManagmentModel.Order" />
+          <AssociationSet Name="FK__Orders__customer__5DCAEF64" Association="CompanyManagmentModel.FK__Orders__customer__5DCAEF64">
             <End Role="Customer" EntitySet="Customers" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
-        </EntityContainer>
-        <Association Name="FK__Orders__customer__34C8D9D1">
+          <EntitySet Name="OrderDetails" EntityType="CompanyManagmentModel.OrderDetail" />
+          <AssociationSet Name="FK__OrderDeta__order__656C112C" Association="CompanyManagmentModel.FK__OrderDeta__order__656C112C">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderDeta__produ__6477ECF3" Association="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="custom_order_id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="custom_order_id" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="customer_id" Type="Int32" Nullable="false" />
+          <Property Name="order_type" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="total_payment" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="payment_amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="rest_amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="cancelled" Type="Boolean" />
+          <Property Name="order_date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Customer" Relationship="CompanyManagmentModel.FK__Orders__customer__5DCAEF64" FromRole="Order" ToRole="Customer" />
+          <NavigationProperty Name="OrderDetails" Relationship="CompanyManagmentModel.FK__OrderDeta__order__656C112C" FromRole="Order" ToRole="OrderDetail" />
+        </EntityType>
+        <Association Name="FK__Orders__customer__5DCAEF64">
           <End Type="CompanyManagmentModel.Customer" Role="Customer" Multiplicity="1" />
           <End Type="CompanyManagmentModel.Order" Role="Order" Multiplicity="*" />
           <ReferentialConstraint>
@@ -273,7 +234,46 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="order_details_id" />
+          </Key>
+          <Property Name="order_details_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_id" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="discount" Type="Double" />
+          <Property Name="total_price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="order_data" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Order" Relationship="CompanyManagmentModel.FK__OrderDeta__order__656C112C" FromRole="OrderDetail" ToRole="Order" />
+          <NavigationProperty Name="Product" Relationship="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3" FromRole="OrderDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK__OrderDeta__order__656C112C">
+          <End Type="CompanyManagmentModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="CompanyManagmentModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="custom_order_id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderDeta__produ__6477ECF3">
+          <End Type="CompanyManagmentModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="CompanyManagmentModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -287,35 +287,6 @@
                 <ScalarProperty Name="phone" ColumnName="phone" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="client" ColumnName="client" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OrderDetails">
-            <EntityTypeMapping TypeName="CompanyManagmentModel.OrderDetail">
-              <MappingFragment StoreEntitySet="OrderDetails">
-                <ScalarProperty Name="order_details_id" ColumnName="order_details_id" />
-                <ScalarProperty Name="order_id" ColumnName="order_id" />
-                <ScalarProperty Name="product_id" ColumnName="product_id" />
-                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
-                <ScalarProperty Name="quantity" ColumnName="quantity" />
-                <ScalarProperty Name="discount" ColumnName="discount" />
-                <ScalarProperty Name="total_price" ColumnName="total_price" />
-                <ScalarProperty Name="order_data" ColumnName="order_data" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Orders">
-            <EntityTypeMapping TypeName="CompanyManagmentModel.Order">
-              <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="order_type" ColumnName="order_type" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="custom_order_id" ColumnName="custom_order_id" />
-                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
-                <ScalarProperty Name="total_payment" ColumnName="total_payment" />
-                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
-                <ScalarProperty Name="rest_amount" ColumnName="rest_amount" />
-                <ScalarProperty Name="cancelled" ColumnName="cancelled" />
-                <ScalarProperty Name="order_date" ColumnName="order_date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -338,6 +309,35 @@
                 <ScalarProperty Name="unit_price" ColumnName="unit_price" />
                 <ScalarProperty Name="total_price" ColumnName="total_price" />
                 <ScalarProperty Name="date_of_buy" ColumnName="date_of_buy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="CompanyManagmentModel.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="order_date" ColumnName="order_date" />
+                <ScalarProperty Name="cancelled" ColumnName="cancelled" />
+                <ScalarProperty Name="rest_amount" ColumnName="rest_amount" />
+                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
+                <ScalarProperty Name="total_payment" ColumnName="total_payment" />
+                <ScalarProperty Name="order_type" ColumnName="order_type" />
+                <ScalarProperty Name="customer_id" ColumnName="customer_id" />
+                <ScalarProperty Name="custom_order_id" ColumnName="custom_order_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="CompanyManagmentModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetails">
+                <ScalarProperty Name="order_data" ColumnName="order_data" />
+                <ScalarProperty Name="total_price" ColumnName="total_price" />
+                <ScalarProperty Name="discount" ColumnName="discount" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="order_details_id" ColumnName="order_details_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

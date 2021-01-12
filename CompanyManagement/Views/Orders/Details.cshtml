@@ -1,0 +1,88 @@
+﻿@model CompanyManagement.Models.OrderViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+<hr />
+<fieldset class="orderfieldset">
+    <div class="row">
+        <div class="col-6">
+            <label class="font-weight-bold">رقم الفاتورة:</label>
+            @Html.DisplayFor(model => model.Order.custom_order_id)
+        </div>
+        <div class="col-6">
+            <label class="font-weight-bold">نوع الفاتورة:</label>
+            @Html.DisplayFor(model => model.Order.order_type)
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label class="font-weight-bold">التاريخ:</label>
+            @Html.DisplayFor(model => model.Order.order_date)
+        </div>
+        <div class="col-6">
+            <label class="font-weight-bold">اسم العميل:</label>
+            <a href="/Customers/Details/@Model.Order.Customer.id">@Model.Order.Customer.name</a>
+        </div>
+    </div>
+</fieldset>
+<fieldset class="orderfieldset">
+    
+    <table class="table" style="background-color:#fff">
+        <thead>
+            <tr>
+                <th>المنتج</th>
+                <th>السعر</th>
+                <th>الكمية</th>
+                <th>discount</th>
+                <th>الاجمالى</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(itemmodel => item.Product.name)</td>
+                    <td>@Html.DisplayFor(itemmodel => item.unit_price)</td>
+                    <td>@Html.DisplayFor(itemmodel => item.quantity)</td>
+                    <td>@Html.DisplayFor(itemmodel => item.discount)%</td>
+                    <td>@Html.DisplayFor(itemmodel => item.total_price)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</fieldset>
+<fieldset class="orderfieldset">
+<dl class="dl-horizontal">
+    <dt>
+        @Html.DisplayNameFor(model => model.Order.total_payment)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Order.total_payment)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Order.payment_amount)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Order.payment_amount)
+    </dd>
+
+    <dt>
+        @Html.DisplayNameFor(model => model.Order.rest_amount)
+    </dt>
+
+    <dd>
+        @Html.DisplayFor(model => model.Order.rest_amount)
+    </dd>
+
+</dl>
+    </fieldset>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Order.custom_order_id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>

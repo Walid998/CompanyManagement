@@ -51,7 +51,7 @@ namespace CompanyManagement.Models
     public class OrderDetailsMetadata
     {
         [Display(Name ="رقم الفاتورة")]
-        public Nullable<int> order_id { get; set; }
+        public string order_id { get; set; }
         [Display(Name = "اسم المنتج")]
         public int product_id { get; set; }
         [Display(Name = "السعر")]

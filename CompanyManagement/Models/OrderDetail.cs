@@ -15,7 +15,7 @@ namespace CompanyManagement.Models
     public partial class OrderDetail
     {
         public int order_details_id { get; set; }
-        public Nullable<int> order_id { get; set; }
+        public string order_id { get; set; }
         public int product_id { get; set; }
         public Nullable<decimal> unit_price { get; set; }
         public Nullable<int> quantity { get; set; }
