@@ -18,6 +18,7 @@ namespace CompanyManagement.Models
         public Order()
         {
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.Transactions = new HashSet<Transaction>();
         }
     
         public int id { get; set; }
@@ -33,5 +34,7 @@ namespace CompanyManagement.Models
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -12,7 +12,11 @@ namespace CompanyManagement
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.MapRoute(
+                name: "Inventory",
+                url: "Inventory/{action}/{id}",
+                defaults: new { controller = "Inventory", action = "AllProductsStock", id = UrlParameter.Optional }
+            );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

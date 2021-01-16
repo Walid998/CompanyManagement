@@ -6,14 +6,23 @@
     <edmx:Diagrams>
       <Diagram DiagramId="7c62137eaa00425d825861e5fbee33c7" Name="Diagram1" ZoomLevel="94">
         <EntityTypeShape EntityType="CompanyManagmentModel.Customer" Width="1.5" PointX="5.75" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CompanyManagmentModel.Product" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="CompanyManagmentModel.Stock" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
-        <AssociationConnector Association="CompanyManagmentModel.FK__Stock__product_i__1273C1CD" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Product" Width="1.5" PointX="0.75" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="CompanyManagmentModel.Order" Width="1.5" PointX="0.75" PointY="1.125" />
         <AssociationConnector Association="CompanyManagmentModel.FK__Orders__customer__5DCAEF64" />
         <EntityTypeShape EntityType="CompanyManagmentModel.OrderDetail" Width="1.5" PointX="3" PointY="2.375" />
         <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__order__656C112C" />
         <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Transaction" Width="1.5" PointX="6" PointY="6" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__Transacti__order__03F0984C" ManuallyRouted="true" >
+          <ConnectorPoint PointX="2.25" PointY="2.0468775000000008" />
+          <ConnectorPoint PointX="6.416666666666667" PointY="2.0468775000000003" />
+          <ConnectorPoint PointX="6.583333333333333" PointY="2.0468775000000008" />
+          <ConnectorPoint PointX="7.40625" PointY="2.0468775000000008" />
+          <ConnectorPoint PointX="7.40625" PointY="6" />
+        </AssociationConnector>
+        <AssociationConnector Association="CompanyManagmentModel.FK__Transacti__produ__02FC7413" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.ProductDetail" Width="1.5" PointX="3" PointY="7" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__ProductDe__produ__05D8E0BE" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

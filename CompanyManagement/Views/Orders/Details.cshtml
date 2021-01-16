@@ -1,11 +1,10 @@
 ﻿@model CompanyManagement.Models.OrderViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "فاتورة - "+Model.Order.custom_order_id;
 }
 
-<h2>Details</h2>
-<hr />
+
 <fieldset class="orderfieldset">
     <div class="row">
         <div class="col-6">
@@ -83,6 +82,5 @@
 </dl>
     </fieldset>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Order.custom_order_id }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("الرجوع الى القائمة", "Index")
     </p>

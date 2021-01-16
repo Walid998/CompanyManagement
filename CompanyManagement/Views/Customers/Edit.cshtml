@@ -41,17 +41,17 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.client, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.type, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select name="client" class="form-control">
-                    <option value="@Html.DisplayFor(model => model.client)" selected hidden>
-                        @Html.DisplayFor(model => model.client)
+                <select name="type" class="form-control">
+                    <option value="@Html.DisplayFor(model => model.type)" selected hidden>
+                        @Html.DisplayFor(model => model.type)
                     </option>
                     <option value="مورد">مورد</option>
                     <option value="زبون">زبون</option>
                     <option value="مورد/زبون">مورد / زبون</option>
                 </select>
-                @Html.ValidationMessageFor(model => model.client, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.type, "", new { @class = "text-danger" })
             </div>
         </div>
 

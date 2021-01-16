@@ -61,7 +61,7 @@ namespace CompanyManagement.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.id = new SelectList(db.Stocks, "product_id", "product_id", product.id);
+            ViewBag.id = new SelectList(db.ProductDetails, "product_id", "product_id", product.id);
             return View(product);
         }
 
@@ -132,16 +132,17 @@ namespace CompanyManagement.Controllers
         }
 
         // ============================================
-        public ActionResult AllProducts()
+        // Create Product: Ajax
+        [HttpPost]
+        public JsonResult CreateProduct([Bind(Include = "name,vat,code")] Product product)
         {
-            var products = db.Products.ToList();
-            Dictionary<string, List<Stock>> allProducts = new Dictionary<string, List<Stock>>();
-            foreach(var item in products)
+            if (ModelState.IsValid)
             {
-                var assocOrders = db.Stocks.Where(o => o.product_id == item.id).OrderBy(o => o.date_of_buy);
-                allProducts[item.name] = assocOrders.ToList();
+                db.Products.Add(product);
+                db.SaveChanges();
+                return Json(product);
             }
-            return View(allProducts);
+            return null;
         }
     }
 }

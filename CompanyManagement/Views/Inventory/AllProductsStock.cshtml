@@ -1,0 +1,39 @@
+﻿@model Dictionary<string, List<CompanyManagement.Models.ProductDetail>>
+@{
+    ViewBag.Title = "المخزون";
+}
+
+<h2>المخزون</h2>
+<hr />
+<table class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>المنتج</th>
+            <th>السعر</th>
+            <th>الكمية</th>
+            <th>القيمة</th>
+            <th>التاريخ</th>
+        </tr>
+    </thead>
+    @if (Model.Count > 0)
+    {
+    foreach (var item in Model)
+    {
+        var x = item.Value.Count + 1;
+        <tr class="font-weight-bold">
+            <td rowspan="@x">
+                <a href="/Inventory/ProductCard/@item.Value[0].product_id">@item.Key</a>
+            </td>
+        </tr>
+        foreach (var itm in item.Value)
+        {
+            <tr style="background-color:#fefefe">
+                <td>@itm.unit_price</td>
+                <td>@itm.quantity</td>
+                <td>@itm.total_price</td>
+                <td>@itm.date_of_buy</td>
+            </tr>
+        }
+    }
+    }
+</table>

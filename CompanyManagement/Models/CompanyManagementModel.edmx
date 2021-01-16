@@ -13,7 +13,7 @@
           <Property Name="name" Type="nvarchar" MaxLength="30" />
           <Property Name="phone" Type="nvarchar" MaxLength="30" />
           <Property Name="email" Type="nvarchar" MaxLength="50" />
-          <Property Name="client" Type="nvarchar" MaxLength="9" />
+          <Property Name="type" Type="nvarchar" MaxLength="9" />
         </EntityType>
         <EntityType Name="OrderDetails">
           <Key>
@@ -42,6 +42,17 @@
           <Property Name="cancelled" Type="bit" />
           <Property Name="order_date" Type="datetime" />
         </EntityType>
+        <EntityType Name="ProductDetails">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="product_id" Type="int" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="unit_price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="total_price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="date_of_buy" Type="datetime" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <EntityType Name="Products">
           <Key>
             <PropertyRef Name="id" />
@@ -51,16 +62,18 @@
           <Property Name="vat" Type="float" />
           <Property Name="code" Type="nvarchar" MaxLength="50" />
         </EntityType>
-        <EntityType Name="Stock">
+        <EntityType Name="Transactions">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="product_id" Type="int" Nullable="false" />
-          <Property Name="quantity" Type="int" />
-          <Property Name="date_of_buy" Type="datetime" />
-          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="unit_price" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="total_price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="product_id" Type="int" />
+          <Property Name="balance" Type="int" />
+          <Property Name="income" Type="int" />
+          <Property Name="outcome" Type="int" />
+          <Property Name="unit_cost" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="move_date" Type="datetime" />
+          <Property Name="order_id" Type="nvarchar" MaxLength="30" />
         </EntityType>
         <Association Name="FK__OrderDeta__order__656C112C">
           <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
@@ -98,14 +111,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Stock__product_i__1273C1CD">
+        <Association Name="FK__ProductDe__produ__05D8E0BE">
           <End Role="Products" Type="Self.Products" Multiplicity="1" />
-          <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
+          <End Role="ProductDetails" Type="Self.ProductDetails" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Products">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="Stock">
+            <Dependent Role="ProductDetails">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__order__03F0984C">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="0..1" />
+          <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="custom_order_id" />
+            </Principal>
+            <Dependent Role="Transactions">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__produ__02FC7413">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transactions">
               <PropertyRef Name="product_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -114,8 +151,9 @@
           <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductDetails" EntityType="Self.ProductDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__OrderDeta__order__656C112C" Association="Self.FK__OrderDeta__order__656C112C">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderDetails" EntitySet="OrderDetails" />
@@ -128,9 +166,17 @@
             <End Role="Customers" EntitySet="Customers" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK__Stock__product_i__1273C1CD" Association="Self.FK__Stock__product_i__1273C1CD">
+          <AssociationSet Name="FK__ProductDe__produ__05D8E0BE" Association="Self.FK__ProductDe__produ__05D8E0BE">
             <End Role="Products" EntitySet="Products" />
-            <End Role="Stock" EntitySet="Stock" />
+            <End Role="ProductDetails" EntitySet="ProductDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__order__03F0984C" Association="Self.FK__Transacti__order__03F0984C">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="Transactions" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__produ__02FC7413" Association="Self.FK__Transacti__produ__02FC7413">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Transactions" EntitySet="Transactions" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -145,8 +191,8 @@
           <Property Name="name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="phone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="client" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Orders" Relationship="CompanyManagmentModel.FK__Orders__customer__5DCAEF64" FromRole="Customer" ToRole="Order" />
+          <Property Name="type" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Product">
           <Key>
@@ -155,42 +201,14 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="vat" Type="Double" />
-          <NavigationProperty Name="Stock" Relationship="Self.FK__Stock__product_i__1273C1CD" FromRole="Products" ToRole="Stock" />
           <Property Name="code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="OrderDetails" Relationship="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3" FromRole="Product" ToRole="OrderDetail" />
+          <NavigationProperty Name="Transactions" Relationship="CompanyManagmentModel.FK__Transacti__produ__02FC7413" FromRole="Product" ToRole="Transaction" />
+          <NavigationProperty Name="ProductDetails" Relationship="CompanyManagmentModel.FK__ProductDe__produ__05D8E0BE" FromRole="Product" ToRole="ProductDetail" />
         </EntityType>
-        <EntityType Name="Stock">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="product_id" Type="Int32" Nullable="false" />
-          <Property Name="quantity" Type="Int32" />
-          <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="total_price" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="date_of_buy" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Product" Relationship="Self.FK__Stock__product_i__1273C1CD" FromRole="Stock" ToRole="Products" />
-          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-        </EntityType>
-        <Association Name="FK__Stock__product_i__1273C1CD">
-          <End Role="Products" Type="Self.Product" Multiplicity="1" />
-          <End Role="Stock" Type="Self.Stock" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Products">
-              <PropertyRef Name="id" />
-            </Principal>
-            <Dependent Role="Stock">
-              <PropertyRef Name="product_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="CompanyManagmentEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Customers" EntityType="Self.Customer" />
           <EntitySet Name="Products" EntityType="Self.Product" />
-          <EntitySet Name="Stocks" EntityType="Self.Stock" />
-          <AssociationSet Name="FK__Stock__product_i__1273C1CD" Association="Self.FK__Stock__product_i__1273C1CD">
-            <End Role="Products" EntitySet="Products" />
-            <End Role="Stock" EntitySet="Stocks" />
-          </AssociationSet>
           <EntitySet Name="Orders" EntityType="CompanyManagmentModel.Order" />
           <AssociationSet Name="FK__Orders__customer__5DCAEF64" Association="CompanyManagmentModel.FK__Orders__customer__5DCAEF64">
             <End Role="Customer" EntitySet="Customers" />
@@ -204,6 +222,20 @@
           <AssociationSet Name="FK__OrderDeta__produ__6477ECF3" Association="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3">
             <End Role="Product" EntitySet="Products" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <EntitySet Name="Transactions" EntityType="CompanyManagmentModel.Transaction" />
+          <AssociationSet Name="FK__Transacti__order__03F0984C" Association="CompanyManagmentModel.FK__Transacti__order__03F0984C">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Transacti__produ__02FC7413" Association="CompanyManagmentModel.FK__Transacti__produ__02FC7413">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <EntitySet Name="ProductDetails" EntityType="CompanyManagmentModel.ProductDetail" />
+          <AssociationSet Name="FK__ProductDe__produ__05D8E0BE" Association="CompanyManagmentModel.FK__ProductDe__produ__05D8E0BE">
+            <End Role="Product" EntitySet="Products" />
+            <End Role="ProductDetail" EntitySet="ProductDetails" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Order">
@@ -221,6 +253,7 @@
           <Property Name="order_date" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Customer" Relationship="CompanyManagmentModel.FK__Orders__customer__5DCAEF64" FromRole="Order" ToRole="Customer" />
           <NavigationProperty Name="OrderDetails" Relationship="CompanyManagmentModel.FK__OrderDeta__order__656C112C" FromRole="Order" ToRole="OrderDetail" />
+          <NavigationProperty Name="Transactions" Relationship="CompanyManagmentModel.FK__Transacti__order__03F0984C" FromRole="Order" ToRole="Transaction" />
         </EntityType>
         <Association Name="FK__Orders__customer__5DCAEF64">
           <End Type="CompanyManagmentModel.Customer" Role="Customer" Multiplicity="1" />
@@ -273,6 +306,69 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="product_id" Type="Int32" />
+          <Property Name="balance" Type="Int32" />
+          <Property Name="income" Type="Int32" />
+          <Property Name="outcome" Type="Int32" />
+          <Property Name="unit_cost" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="move_date" Type="DateTime" Precision="3" />
+          <Property Name="order_id" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Order" Relationship="CompanyManagmentModel.FK__Transacti__order__03F0984C" FromRole="Transaction" ToRole="Order" />
+          <NavigationProperty Name="Product" Relationship="CompanyManagmentModel.FK__Transacti__produ__02FC7413" FromRole="Transaction" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK__Transacti__order__03F0984C">
+          <End Type="CompanyManagmentModel.Order" Role="Order" Multiplicity="0..1" />
+          <End Type="CompanyManagmentModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="custom_order_id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Transacti__produ__02FC7413">
+          <End Type="CompanyManagmentModel.Product" Role="Product" Multiplicity="0..1" />
+          <End Type="CompanyManagmentModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProductDetail">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="product_id" Type="Int32" Nullable="false" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="unit_price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="total_price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="date_of_buy" Type="DateTime" Precision="3" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Product" Relationship="CompanyManagmentModel.FK__ProductDe__produ__05D8E0BE" FromRole="ProductDetail" ToRole="Product" />
+        </EntityType>
+        <Association Name="FK__ProductDe__produ__05D8E0BE">
+          <End Type="CompanyManagmentModel.Product" Role="Product" Multiplicity="1" />
+          <End Type="CompanyManagmentModel.ProductDetail" Role="ProductDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ProductDetail">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -282,11 +378,11 @@
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="CompanyManagmentModel.Customer">
               <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="phone" ColumnName="phone" />
                 <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="client" ColumnName="client" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -297,18 +393,6 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="vat" ColumnName="vat" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Stocks">
-            <EntityTypeMapping TypeName="CompanyManagmentModel.Stock">
-              <MappingFragment StoreEntitySet="Stock">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="product_id" ColumnName="product_id" />
-                <ScalarProperty Name="quantity" ColumnName="quantity" />
-                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
-                <ScalarProperty Name="total_price" ColumnName="total_price" />
-                <ScalarProperty Name="date_of_buy" ColumnName="date_of_buy" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -338,6 +422,32 @@
                 <ScalarProperty Name="product_id" ColumnName="product_id" />
                 <ScalarProperty Name="order_id" ColumnName="order_id" />
                 <ScalarProperty Name="order_details_id" ColumnName="order_details_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="CompanyManagmentModel.Transaction">
+              <MappingFragment StoreEntitySet="Transactions">
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="move_date" ColumnName="move_date" />
+                <ScalarProperty Name="unit_cost" ColumnName="unit_cost" />
+                <ScalarProperty Name="outcome" ColumnName="outcome" />
+                <ScalarProperty Name="income" ColumnName="income" />
+                <ScalarProperty Name="balance" ColumnName="balance" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductDetails">
+            <EntityTypeMapping TypeName="CompanyManagmentModel.ProductDetail">
+              <MappingFragment StoreEntitySet="ProductDetails">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="date_of_buy" ColumnName="date_of_buy" />
+                <ScalarProperty Name="total_price" ColumnName="total_price" />
+                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

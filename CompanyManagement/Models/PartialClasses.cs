@@ -18,12 +18,16 @@ namespace CompanyManagement.Models
     public partial class OrderDetail
     {
     }
-    [MetadataType(typeof(StockMetadata))]
-    public partial class Stock
+    [MetadataType(typeof(ProductDetailsMetadata))]
+    public partial class ProductDetail
     {
     }
     [MetadataType(typeof(CustomerMetadata))]
     public partial class Customer
+    {
+    }
+    [MetadataType(typeof(TransactionsMetadata))]
+    public partial class Transaction
     {
     }
 }

@@ -55,7 +55,7 @@ namespace CompanyManagement.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,name,phone,email,client")] Customer customer)
+        public ActionResult Create([Bind(Include = "id,name,phone,email,type")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace CompanyManagement.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,name,phone,email,client")] Customer customer)
+        public ActionResult Edit([Bind(Include = "id,name,phone,email,type")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -131,6 +131,19 @@ namespace CompanyManagement.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // Create Customer: Ajax
+        [HttpPost]
+        public JsonResult CreateCustomer([Bind(Include ="name,phone,email,type")] Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Customers.Add(customer);
+                db.SaveChanges();
+                return Json(customer);
+            }
+            return null;
         }
     }
 }

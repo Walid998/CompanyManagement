@@ -132,7 +132,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\OrderDetailsController.cs" />
+    <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -168,7 +168,10 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>CompanyManagementModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Stock.cs">
+    <Compile Include="Models\ProductDetail.cs">
+      <DependentUpon>CompanyManagementModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Transaction.cs">
       <DependentUpon>CompanyManagementModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -360,7 +363,8 @@
     <Content Include="Views\Orders\Create.cshtml" />
     <Content Include="Views\OrderDetails\_Index.cshtml" />
     <Content Include="Views\Orders\Details.cshtml" />
-    <Content Include="Views\Products\AllProducts.cshtml" />
+    <Content Include="Views\Inventory\AllProductsStock.cshtml" />
+    <Content Include="Views\Inventory\ProductCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

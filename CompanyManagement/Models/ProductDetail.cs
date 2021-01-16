@@ -12,14 +12,14 @@ namespace CompanyManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Stock
+    public partial class ProductDetail
     {
         public int product_id { get; set; }
         public Nullable<int> quantity { get; set; }
         public Nullable<decimal> unit_price { get; set; }
         public Nullable<decimal> total_price { get; set; }
         public Nullable<System.DateTime> date_of_buy { get; set; }
-        public long id { get; set; }
+        public int id { get; set; }
     
         public virtual Product Product { get; set; }
     }

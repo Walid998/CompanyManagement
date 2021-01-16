@@ -16,7 +16,7 @@ namespace CompanyManagement.Models
         [Display(Name = "كود المنتج")]
         public string code { get; set; }
     }
-    public class StockMetadata
+    public class ProductDetailsMetadata
     {
         [Display(Name = "اسم المنتج")]
         public int product_id { get; set; }
@@ -74,7 +74,26 @@ namespace CompanyManagement.Models
         [Display(Name = "البريد الالكترونى")]
         public string email { get; set; }
         [Display(Name = "نوع العميل")]
-        public string client { get; set; }
+        public string type { get; set; }
     }
 
+    public class TransactionsMetadata
+    {
+        [Display(Name ="رقم الحركة")]
+        public int id { get; set; }
+        [Display(Name = "المنتج")]
+        public Nullable<int> product_id { get; set; }
+        [Display(Name = "الرصيد")]
+        public Nullable<int> balance { get; set; }
+        [Display(Name = "الوارد")]
+        public Nullable<int> income { get; set; }
+        [Display(Name = "الصادر")]
+        public Nullable<int> outcome { get; set; }
+        [Display(Name = "التكلفة")]
+        public Nullable<decimal> unit_cost { get; set; }
+        [Display(Name = "التاريخ")]
+        public Nullable<System.DateTime> move_date { get; set; }
+        [Display(Name = "البيان")]
+        public string order_id { get; set; }
+    }
 }

@@ -40,16 +40,16 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.client, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.type, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.EditorFor(model => model.client, new { htmlAttributes = new { @class = "form-control" } })*@
-                <select name="client" class="form-control">
+                @*@Html.EditorFor(model => model.type, new { htmlAttributes = new { @class = "form-control" } })*@
+                <select name="type" class="form-control">
                     <option value="" selected hidden>-- إختار</option>
                     <option value="مورد">مورد</option>
                     <option value="زبون">زبون</option>
                     <option value="مورد/زبون">مورد / زبون</option>
                 </select>
-                @Html.ValidationMessageFor(model => model.client, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.type, "", new { @class = "text-danger" })
             </div>
         </div>
 

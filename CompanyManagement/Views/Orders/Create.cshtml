@@ -6,14 +6,14 @@
 
 <style>
 
-    #addCustmoer {
+    #addCustmoer,#AddProduct {
         cursor: pointer;
         color: #007bff;
     }
 
-        #addCustmoer:hover {
-            text-decoration: underline;
-        }
+    #addCustmoer:hover, #AddProduct:hover{
+        text-decoration: underline;
+    }
 </style>
 
 <h2>فاتورة جديدة</h2>
@@ -22,7 +22,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <fieldset class="orderfieldset">
+    <fieldset class="orderfieldset_base">
         @*<legend>الفاتورة</legend>*@
         <div class="row">
             <div class="col-xl-4">
@@ -73,6 +73,8 @@
                         }
                     </select>
                     @Html.ValidationMessageFor(model => model.OrderDetail.product_id, "", htmlAttributes: new { @class = "text-danger" })
+                    <small><a id="AddProduct" onclick="AddProduct()">إضافة منتج جديد <i class="fa fa-plus-circle"></i></a></small>
+
                 </div>
             </div>
             <div class="col-xl-4">
@@ -91,6 +93,7 @@
                     <input type="hidden" id="available_quantity_value"/>
                 </div>
             </div>
+
         </div>
         <div class="row">
             <div class="col-xl-4">
@@ -171,17 +174,17 @@
             </div>
             <div class="col-12 modal-body text-center" style="direction:rtl;">
                 <div class="form-group">
-                    <input type="text" class="col-12 form-control text-center" placeholder="أسم العميل" />
+                    <input type="text" id="CustomerModal_Name" class="col-12 form-control text-center" placeholder="أسم العميل" />
                 </div>
                 <div class="form-group">
-                    <input type="text" class="col-12 form-control text-center" placeholder="الهاتف" />
+                    <input type="text" id="CustomerModal_Phone" class="col-12 form-control text-center" placeholder="الهاتف" />
                 </div>
                 <div class="form-group">
-                    <input type="email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" />
+                    <input type="email" id="CustomerModal_Email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" />
                 </div>
                 <div class="form-group" style="text-align:center">
-                    <select name="client" class="col-12 form-control">
-                        <option value="" selected hidden>اختار نوع العميل -- </option>
+                    <select name="type" id="CustomerModal_Type" class="col-12 form-control">
+                        <option value="0" selected hidden>اختار نوع العميل -- </option>
                         <option value="مورد">مورد</option>
                         <option value="زبون">زبون</option>
                         <option value="مورد/زبون">مورد / زبون</option>
@@ -189,8 +192,33 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
-                <button type="button" class="btn btn-primary">حفظ</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_cust">إلغاء</button>
+                <button type="button" onclick="CreateCustomer()" class="btn btn-primary">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Add Product -->
+<div class="modal fade" id="AddProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="col-12 modal-title text-center" id="exampleModalLongTitle">إضافة منتج جديد</h5>
+            </div>
+            <div class="col-12 modal-body text-center" style="direction:rtl;">
+                <div class="form-group">
+                    <input type="text" id="ProductModal_Code" class="col-12 form-control text-center" placeholder="كود المنتج" />
+                </div>
+                <div class="form-group">
+                    <input type="text" id="ProductModal_Name" class="col-12 form-control text-center" placeholder="اسم المنتج" />
+                </div>
+                <div class="form-group">
+                    <input type="number" id="ProductModal_Vat" class="col-12 form-control text-center" placeholder="القيمة المضافة" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_pro">إلغاء</button>
+                <button type="button" onclick="CreateProduct()" class="btn btn-primary">حفظ</button>
             </div>
         </div>
     </div>
@@ -229,7 +257,12 @@
             if (order_type == "شراء")
                 $("#OrderDetail_unit_price").removeAttr("disabled");
             else
-                $("#OrderDetail_unit_price").attr("disabled","disabled");
+                $("#OrderDetail_unit_price").attr("disabled", "disabled");
+
+            if ($("#order_type").val() == 0)
+                $(".orderfieldset").attr("disabled", "disabled");
+            else
+                $(".orderfieldset").removeAttr("disabled");
         });
         // Calculate Total SubOrder
         $("#OrderDetail_quantity").on("keyup keypress", function (e) {
@@ -241,7 +274,7 @@
             
             var avaliable_quan = parseFloat($("#available_quantity_value").val());
             var required_qaun = parseFloat($("#OrderDetail_quantity").val());
-            if (required_qaun > avaliable_quan) {
+            if ($("#order_type").val() == "بيع" && required_qaun > avaliable_quan) {
                 $("#quantity_validation").text("الكمية المطلوبة اكبر من الكمية المتاحة");
                 $("#AddItems").attr("disabled", "disabled");
             }
@@ -258,7 +291,7 @@
                 $("#quantity_validation").text("");
                 $("#AddItems").removeAttr("disabled");
             }
-
+            
         });
         // Calculate Total SubOrder after discount
         $("#OrderDetail_discount").on("keyup keypress", function (e) {
@@ -277,8 +310,8 @@
         $("#Order_payment_amount").on("keyup", function () {
             CalcRest();
         })
-
-        
+        if ($("#order_type").val() == 0)
+            $(".orderfieldset").attr("disabled", "disabled");
     });
 
     function TotalSubOrder() {
@@ -406,10 +439,14 @@
     function AddCustomer() {
         $('#AddCustomerModal').appendTo("body").modal('show');
     }
-    // Add Customer
+    // Add Product
+    function AddProduct() {
+        $('#AddProductModal').appendTo("body").modal('show');
+    }
+    // Add Order
     function OrderPlaced() {
         $('#OrderPlaced').appendTo("body").modal('show');
-    }
+    } 
     // Ajax Calls
     function IsOrderIdFounded(orderId) {
         $.ajax({
@@ -453,8 +490,6 @@
             error: function (xhr) {
                 alert("المنتج غير متوفر فى المخزن");
             },
-            
-            
         });
     }
 
@@ -526,6 +561,68 @@
                 alert("حدث مشكلة اثناء حفظ الفاتورة");
             }
         });
+    }
+
+    function CreateCustomer() {
+        Customer = {};
+        Customer.name = $("#CustomerModal_Name").val();
+        Customer.phone = $("#CustomerModal_Phone").val();
+        Customer.email = $("#CustomerModal_Email").val();
+        Customer.type = $("#CustomerModal_Type").val();
+        $.ajax({
+            async: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/Customers/CreateCustomer",
+            data: JSON.stringify(Customer),
+            success: function (data) {
+                $("#CloseModal_cust").click();
+                alert("تم إضافة العميل: " + data.name);
+                resetCreateCustomerForm();
+                var new_customer = "<option value='" + data.id + "'>" + data.name + "</option>";
+                $("#customer_id").append(new_customer);
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function resetCreateCustomerForm() {
+        $("#CustomerModal_Type").val(0);
+        $("#CustomerModal_Name").val('');
+        $("#CustomerModal_Phone").val('');
+        $("#CustomerModal_Email").val('');
+    }
+
+    function CreateProduct() {
+        Product = {};
+        Product.name = $("#ProductModal_Name").val();
+        Product.code = $("#ProductModal_Code").val();
+        Product.vat = $("#ProductModal_Vat").val();
+        $.ajax({
+            async: true,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/Products/CreateProduct",
+            data: JSON.stringify(Product),
+            success: function (data) {
+                $("#CloseModal_pro").click();
+                alert("تم إضافة المنتج: " + data.name);
+                resetCreateProductForm();
+                var new_product = "<option value='" + data.id + "'>" + data.name + "</option>";
+                $("#product_id").append(new_product);
+            },
+            error: function () {
+
+            }
+        });
+    }
+    function resetCreateProductForm() {
+        $("#ProductModal_Name").val('');
+        $("#ProductModal_Code").val('');
+        $("#ProductModal_Vat").val('');
     }
 </script>
 

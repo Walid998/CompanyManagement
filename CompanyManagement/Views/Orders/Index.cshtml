@@ -54,7 +54,8 @@
             @Html.DisplayFor(modelItem => item.order_type)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Customer.name)
+            @*@Html.DisplayFor(modelItem => item.Customer.name)*@
+            <a href="/Customers/Details/@item.Customer.id">@item.Customer.name</a>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.total_payment)

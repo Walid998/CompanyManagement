@@ -25,7 +25,7 @@ namespace CompanyManagement.Controllers
         {
             try
             {
-                var product = db.Stocks.OrderBy(s => s.date_of_buy).First(s => s.product_id == productId && s.quantity > 0);
+                var product = db.ProductDetails.OrderBy(s => s.date_of_buy).First(s => s.product_id == productId && s.quantity > 0);
                 Object[] product_data = new Object[] {product.unit_price,product.quantity };
                 return Json(product_data, JsonRequestBehavior.AllowGet);
             }
@@ -45,7 +45,7 @@ namespace CompanyManagement.Controllers
             }
             catch
             {
-
+                
             }
             
             return Json(founded,JsonRequestBehavior.AllowGet);
@@ -62,7 +62,13 @@ namespace CompanyManagement.Controllers
             
             return View(order);
         }
-
+        [HttpPost]
+        public JsonResult CreateOrder(Order order)
+        {
+            OrderViewModel orderViewModel = new OrderViewModel();
+            orderViewModel.AddOrder(order);
+            return Json("تم حفظ الفاتورة بنجاح !!", JsonRequestBehavior.AllowGet);
+        }
         // GET: Details
         public ActionResult Details(string id)
         {
@@ -79,24 +85,6 @@ namespace CompanyManagement.Controllers
             else
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest); 
         }
-
-        // GET: Edit
-        public ActionResult Edit(int? id)
-        {
-            return View();
-        }
-
-        // GET: Delete
-        public ActionResult Delete(int? id)
-        {
-            return View();
-        }
-        [HttpPost]
-        public JsonResult CreateOrder(Order order)
-        {
-            OrderViewModel orderViewModel = new OrderViewModel();
-            orderViewModel.AddOrder(order);
-            return Json("تم حفظ الفاتورة بنجاح !!", JsonRequestBehavior.AllowGet);
-        }
+        
     }
 }
