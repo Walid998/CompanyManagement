@@ -14,15 +14,20 @@
         <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__produ__6477ECF3" />
         <EntityTypeShape EntityType="CompanyManagmentModel.Transaction" Width="1.5" PointX="6" PointY="6" />
         <AssociationConnector Association="CompanyManagmentModel.FK__Transacti__order__03F0984C" ManuallyRouted="true" >
-          <ConnectorPoint PointX="2.25" PointY="2.0468775000000008" />
-          <ConnectorPoint PointX="6.416666666666667" PointY="2.0468775000000003" />
-          <ConnectorPoint PointX="6.583333333333333" PointY="2.0468775000000008" />
-          <ConnectorPoint PointX="7.40625" PointY="2.0468775000000008" />
+          <ConnectorPoint PointX="2.25" PointY="1.9586825292968761" />
+          <ConnectorPoint PointX="6.416666666666667" PointY="1.9586825292968755" />
+          <ConnectorPoint PointX="6.583333333333333" PointY="1.9586825292968761" />
+          <ConnectorPoint PointX="7.40625" PointY="1.9586825292968761" />
           <ConnectorPoint PointX="7.40625" PointY="6" />
         </AssociationConnector>
         <AssociationConnector Association="CompanyManagmentModel.FK__Transacti__produ__02FC7413" />
         <EntityTypeShape EntityType="CompanyManagmentModel.ProductDetail" Width="1.5" PointX="3" PointY="7" />
         <AssociationConnector Association="CompanyManagmentModel.FK__ProductDe__produ__05D8E0BE" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.Unit_of_Measures" Width="1.5" PointX="10.625" PointY="0.875" />
+        <EntityTypeShape EntityType="CompanyManagmentModel.UoMCategory" Width="1.5" PointX="8.375" PointY="1" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__Unit_of_M__categ__2BFE89A6" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__Products__unit_o__30C33EC3" />
+        <AssociationConnector Association="CompanyManagmentModel.FK__OrderDeta__uom_i__3B40CD36" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

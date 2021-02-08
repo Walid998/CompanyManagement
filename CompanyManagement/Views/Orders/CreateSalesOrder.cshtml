@@ -1,0 +1,298 @@
+﻿@model CompanyManagement.Models.OrderViewModel
+@{
+    ViewBag.Title = "فاتورة بيع جديدة";
+}
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<h2>فاتورة بيع جديدة</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <fieldset class="orderfieldset_base">
+        <div class="row">
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Order.custom_order_id, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Order.custom_order_id, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Order.custom_order_id, "", htmlAttributes: new { @class = "text-danger", @id = "order_id_validation" })
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Order.customer_id, htmlAttributes: new { @class = "control-label" })
+                    <select name="customer_id" id="customer_id" class="form-control">
+                        <option value="" selected hidden>-- اختار العميل</option>
+                        @foreach (var client in Model.Customers)
+                        {
+                            <option value="@client.id">@client.name</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(model => model.Order.customer_id, "", htmlAttributes: new { @class = "text-danger" })
+                    <small><a id="addCustmoer" onclick="AddCustomer()">إضافة عميل جديد <i class="fa fa-plus-circle"></i></a></small>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="form-group">
+                    <label class="control-label">التاريخ</label>
+                    <input class="form-control" type="datetime-local" value="@DateTime.Now.ToString("s")" id="order_date">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="orderfieldset">
+        <div class="row">
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <label for="product_id" class="control-label">المنتج</label>
+                    <select name="product_id" id="product_id" class="form-control">
+                        <option value="" selected hidden>-- اختار المنتج</option>
+                        @foreach (var item in Model.Products)
+                        {
+                            <option value="@item.id">@item.name</option>
+                        }
+                    </select>
+                    @Html.ValidationMessageFor(model => model.OrderDetail.product_id, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <label class="control-label" for="OrderDetail_sale_price">سعر الوحدة</label>
+                    @Html.EditorFor(model => model.OrderDetail.sale_price, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @type = "number" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.sale_price, "", htmlAttributes: new { @class = "text-danger" })
+                    <small id="available_quantity_txt" style="color:forestgreen;font-weight:bold"></small>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <label class="control-label">وحدة القياس</label>
+                    <select name="product_uom" id="product_uom" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.quantity, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.quantity, new { htmlAttributes = new { @class = "form-control", @type = "number" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.quantity, "", htmlAttributes: new { @class = "text-danger", @id = "quantity_validation" })
+                    <input type="hidden" id="available_quantity_value" />
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <label class="control-label" title="ضريبة القيمة المضافة">ض.ق.م <input type="checkbox" id="hasVat" checked /></label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" style="cursor:default;border-radius:0px 4px 4px 0px" disabled>%</button>
+                        </div>
+                        <input type="text" name="product_vat" id="Product_Vat" style="border-radius:4px 0px 0px 4px;border-right:none" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <label class="control-label">discount</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" style="cursor:default;border-radius:0px 4px 4px 0px" disabled>%</button>
+                        </div>
+                        <input type="number" name="OrderDetail.discount" id="OrderDetail_discount" style="border-radius:4px 0px 0px 4px;border-right:none" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDetail.total_price, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.OrderDetail.total_price, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.OrderDetail.total_price, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <button class="btn btn-success" id="AddItems" style="margin-top:31px;width:100%" onclick="AddItemsToTable()">إضافة الى الفاتورة</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="orderfieldset" style="max-height:300px;overflow-y:scroll">
+        <table class="table" id="ItemListOfSubOrders">
+            <thead>
+                <tr>
+                    <th hidden></th>
+                    <th>المنتج</th>
+                    <th>الكمية</th>
+                    <th>وحدة القياس</th>
+                    <th>سعر الوحدة</th>
+                    <th>discount</th>
+                    <th>الضرائب</th>
+                    <th>الاجمالى الفرعى</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </fieldset>
+    <fieldset class="orderfieldset">
+        <div class="row" id="OrderTail">
+            <div class="col-xl-6">
+                <table>
+                    <tr>
+                        <td><span id="TotalBeforVat">0.00</span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><b>:المبلغ بدون ضرائب</b></td>
+                    </tr>
+                    <tr>
+                        <td><span id="TotalVat">0.00</span></td>
+                        <td><b>:الضرائب</b></td>
+                    </tr>
+
+                    <tr style="border-top: 1px solid #cccccc;font-family:'Arial';font-size:20px">
+                        <td><b id="Order_total_payment">0.00</b></td>
+                        <td><span>:الاجمالى</span></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-xl-6" style="border-right: 1px solid #cccccc;">
+                <textarea rows="3" id="notes" name="notes" class="form-control" placeholder="إضافة شروط  .."></textarea>
+            </div>
+        </div>
+    </fieldset>
+    <div style="text-align:center">
+        <button id="CreateBill" type="button" class="btn btn-outline-primary" onclick="PurchaseInvoice()">حفظ الفاتورة</button>
+    </div>
+
+}
+<input type="hidden" id="OrderType" value="بيع" />
+@Html.Partial("_OrderModals")
+<script src="~/Scripts/OrderScripts.js"></script>
+<script type="text/javascript">
+    function PurchaseInvoice(){
+        PlaceAnOrder("بيع");
+    }
+    function GetPriceOfProduct(productId) {
+        $("#available_quantity_txt").text('');
+        $.ajax({
+            async: true,
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            url: "/Orders/GetProductPrice",
+            data: { productId: productId },
+            success: function (result) {
+                $("#product_uom").find("option").each(function () {
+                    $(this).remove();
+                });
+                if (result.prop1 != null) {
+                    $("#OrderDetail_sale_price").val(parseFloat(result.prop1[0]).toFixed(2));
+                    $("#available_quantity_txt").text("متوفر " + result.prop1[1] + " قطعة على هذا السعر");
+                    $("#available_quantity_value").val(result.prop1[1]);
+
+                } else {
+                    alert("المنتج غير متوفر فى المخزن");
+                }
+                if (result.prop2 != null) {
+                    $.each(result.prop2, function () {
+                        $("#product_uom").append($("<option />").val(this[0]).text(this[1]));
+                    });
+                    $("#Product_Vat").val(result.prop3);
+                } else
+                    alert("لم يتم تخصيص وحدة قياس لهذا المنتج");
+
+            },
+
+        });
+    }
+
+    $(document).ready(function () {
+        // Get Product Price
+        $('#product_id').on('change', function () {
+            var productId = $("#product_id").val();
+            GetPriceOfProduct(productId);
+        });
+        $('#hasVat').on('change', function () {
+            if (!$("#hasVat").is(":checked")) {
+                $("#Product_Vat").css("text-decoration", "line-through");
+            }
+            else {
+                $("#Product_Vat").css("text-decoration", "none");
+            }
+        });
+        //Calculate Total SubOrder after discount
+        $("#OrderDetail_discount").on("keyup", function (e) {
+            var keyCode = e.keyCode || e.which;
+            if (keyCode === 13) {
+                e.preventDefault();
+                return false;
+            }
+            var new_total = TotalSubOrder_OnDiscount();
+            console.log(new_total);
+            if (new_total != "NaN")
+                $("#OrderDetail_total_price").val(new_total);
+            else
+                $("#OrderDetail_total_price").val(TotalSubOrder("بيع"));
+        });
+    })
+    function TotalSubOrder_OnDiscount() {
+        var discount = parseFloat($("#OrderDetail_discount").val());
+        var total = parseFloat($("#OrderDetail_total_price").val());
+        return parseFloat(total - (total * (discount / 100))).toFixed(2);
+    }
+
+    function AddItemsToTable() {
+        if ($("#product_id").val() != "") {
+            if ($("#OrderDetail_quantity").val() != "" &&
+                $("#OrderDetail_quantity").val() != "0") {
+                var tblItemList = $("#ItemListOfSubOrders");
+                var product_id = $("#product_id").val();
+                var product_name = $("#product_id option:selected").text();
+                var quantity = $("#OrderDetail_quantity").val();
+                var uom_id = $("#product_uom").val();
+                var uom = $("#product_uom option:selected").text();
+                var sale_price = $("#OrderDetail_sale_price").val();
+                var discount = $("#OrderDetail_discount").val();
+                var product_vat = $("#Product_Vat").val();
+                if ($("#OrderDetail_discount").val() == '')
+                    discount = 0;
+                if (!$("#hasVat").is(":checked"))
+                    product_vat = 0;
+                if ($("#Product_Vat").val() == '')
+                    product_vat = 0;
+
+                var total_price = $("#OrderDetail_total_price").val();
+                var ItemList =
+                    "<tr><td hidden>" +
+                    product_id
+                    + "</td><td>"
+                    + product_name
+                    + "</td><td>"
+                    + quantity
+                    + "</td><td>"
+                    + uom
+                    + "</td><td>"
+                    + sale_price
+                    + "</td><td>"
+                    + discount
+                    + "%</td><td>"
+                    + product_vat
+                    + "%</td><td>"
+                    + total_price
+                    + "</td><td><button class='btn btn-danger' onclick='RemoveSubOrder(this)'>حذف</button>"
+                    + "</td><td hidden>"
+                    + uom_id
+                    + "</td></tr>";
+                tblItemList.append(ItemList);
+                CalcFinalTotal();
+                ResetSubOrder();
+            } else {
+                alert("يجب ان تكون الكمية اكبر من 0");
+                $("#OrderDetail_quantity").focus();
+            }
+        } else {
+            alert("يجب اختيار منتج");
+            $("#product_id").focus();
+        }
+    }
+</script>

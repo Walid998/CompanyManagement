@@ -1,0 +1,57 @@
+﻿@model CompanyManagement.Models.Unit_of_Measures
+
+@{
+    ViewBag.Title = "حذف - "+Model.unit_name;
+}
+
+<h2>@Model.unit_name</h2>
+
+<h3>هل انت متأكد من حذف هذه الوحدة?</h3>
+<div>
+    <h4>Unit_of_Measures</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.unit_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.unit_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ratio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ratio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UoMCategory.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UoMCategory.name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="حذف" class="btn btn-default DeleteButton" /> |
+        @Html.ActionLink("الرجوع الى القائمة", "Index")
+    </div>
+    }
+</div>

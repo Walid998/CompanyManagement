@@ -25,7 +25,7 @@ namespace CompanyManagement.Controllers
             return View(allProducts);
         }
 
-        public ActionResult ProductCard(int? id)
+        public ActionResult ProductTransactions(int? id)
         {
             if (id != null)
             {

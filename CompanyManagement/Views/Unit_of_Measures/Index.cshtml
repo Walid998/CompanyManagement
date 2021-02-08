@@ -1,0 +1,73 @@
+﻿@model IEnumerable<CompanyManagement.Models.Unit_of_Measures>
+
+@{
+    ViewBag.Title = "وحدات القياس";
+}
+<a href="/UoMCategories/Index" style="display:inline;float:left"><i class="fa fa-folder-open"></i> فئات وحدات القياس</a>
+<h2>
+    وحدات القياس
+</h2>
+
+<div id="Search">
+    @using (Ajax.BeginForm("SearchUnits", "Unit_of_Measures", new AjaxOptions()
+    {
+        UpdateTargetId = "ContentGrid",
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace
+    }, new { @style = "display:inline" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="input-group mb-3">
+        <input type="text" class="form-control SearchInput" name="UnitName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
+        </div>
+        <a href="/Unit_of_Measures/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة وحدة قياس</a>
+        
+    </div>
+    }
+
+</div>
+
+<div id="ContentGrid">
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.unit_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.unit_type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ratio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UoMCategory.name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.unit_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.unit_type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ratio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UoMCategory.name)
+        </td>
+        <td>
+            @Html.ActionLink("تعديل", "Edit", new { id=item.id }) |
+            @Html.ActionLink("تفاصيل", "Details", new { id=item.id }) |
+            @Html.ActionLink("حذف", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
+</div>

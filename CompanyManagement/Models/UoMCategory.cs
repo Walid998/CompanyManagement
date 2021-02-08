@@ -12,22 +12,19 @@ namespace CompanyManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Customer
+    public partial class UoMCategory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Customer()
+        public UoMCategory()
         {
-            this.Orders = new HashSet<Order>();
+            this.Unit_of_Measures = new HashSet<Unit_of_Measures>();
         }
     
         public int id { get; set; }
         public string name { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
-        public string type { get; set; }
-        public string notes { get; set; }
+        public Nullable<bool> refranse_flag { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Unit_of_Measures> Unit_of_Measures { get; set; }
     }
 }

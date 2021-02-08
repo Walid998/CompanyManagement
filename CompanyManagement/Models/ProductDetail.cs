@@ -15,11 +15,12 @@ namespace CompanyManagement.Models
     public partial class ProductDetail
     {
         public int product_id { get; set; }
-        public Nullable<int> quantity { get; set; }
-        public Nullable<decimal> unit_price { get; set; }
         public Nullable<decimal> total_price { get; set; }
         public Nullable<System.DateTime> date_of_buy { get; set; }
         public int id { get; set; }
+        public Nullable<double> quantity { get; set; }
+        public Nullable<decimal> sale_price { get; set; }
+        public Nullable<decimal> cost_price { get; set; }
     
         public virtual Product Product { get; set; }
     }

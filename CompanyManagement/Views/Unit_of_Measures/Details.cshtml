@@ -1,0 +1,50 @@
+﻿@model CompanyManagement.Models.Unit_of_Measures
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Unit_of_Measures</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.unit_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.unit_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ratio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ratio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UoMCategory.name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UoMCategory.name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("الرجوع الى القائمة", "Index")
+</p>

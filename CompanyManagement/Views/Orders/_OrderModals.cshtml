@@ -1,0 +1,71 @@
+﻿<!-- Modal Add Customer -->
+<div class="modal fade" id="AddCustomerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="col-12 modal-title text-center" id="exampleModalLongTitle">إضافة عميل جديد</h5>
+            </div>
+            <div class="col-12 modal-body text-center" style="direction:rtl;">
+                <div class="form-group">
+                    <input type="text" id="CustomerModal_Name" class="col-12 form-control text-center" placeholder="أسم العميل" />
+                </div>
+                <div class="form-group">
+                    <input type="text" id="CustomerModal_Phone" class="col-12 form-control text-center" placeholder="الهاتف" />
+                </div>
+                <div class="form-group">
+                    <input type="email" id="CustomerModal_Email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" />
+                </div>
+                <div class="form-group" style="text-align:center">
+                    <select name="type" id="CustomerModal_Type" class="col-12 form-control">
+                        <option value="0" selected hidden>اختار نوع العميل -- </option>
+                        <option value="مورد">مورد</option>
+                        <option value="زبون">زبون</option>
+                        <option value="مورد/زبون">مورد / زبون</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_cust">إلغاء</button>
+                <button type="button" onclick="CreateCustomer()" class="btn btn-primary">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Add Product -->
+<div class="modal fade" id="AddProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="col-12 modal-title text-center" id="exampleModalLongTitle">إضافة منتج جديد</h5>
+            </div>
+            <div class="col-12 modal-body text-center" style="direction:rtl;">
+                <div class="form-group">
+                    <input type="text" id="ProductModal_Code" class="col-12 form-control text-center" placeholder="كود المنتج" />
+                </div>
+                <div class="form-group">
+                    <input type="text" id="ProductModal_Name" class="col-12 form-control text-center" placeholder="اسم المنتج" />
+                </div>
+                <div class="form-group">
+                    <input type="number" id="ProductModal_Vat" class="col-12 form-control text-center" placeholder="القيمة المضافة" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_pro">إلغاء</button>
+                <button type="button" onclick="CreateProduct()" class="btn btn-primary">حفظ</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Order Placed-->
+<div class="modal fade" id="OrderPlaced" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="col-12 modal-body text-center" style="direction:rtl;">
+                <p>تم حفظ الفاتورة بنجاح</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">تم</button>
+            </div>
+        </div>
+    </div>
+</div>

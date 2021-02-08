@@ -7,27 +7,19 @@ using System.ComponentModel.DataAnnotations;
 namespace CompanyManagement.Models
 {
     [MetadataType(typeof(ProductMetadata))]
-    public partial class Product
-    {
-    }
+    public partial class Product { }
     [MetadataType(typeof(OrderMetadata))]
-    public partial class Order
-    {
-    }
+    public partial class Order { }
     [MetadataType(typeof(OrderDetailsMetadata))]
-    public partial class OrderDetail
-    {
-    }
+    public partial class OrderDetail { }
     [MetadataType(typeof(ProductDetailsMetadata))]
-    public partial class ProductDetail
-    {
-    }
+    public partial class ProductDetail { }
     [MetadataType(typeof(CustomerMetadata))]
-    public partial class Customer
-    {
-    }
+    public partial class Customer { }
     [MetadataType(typeof(TransactionsMetadata))]
-    public partial class Transaction
-    {
-    }
+    public partial class Transaction { }
+    [MetadataType(typeof(UnitOfMeasureMetadata))]
+    public partial class Unit_of_Measures { }
+    [MetadataType(typeof(UoMCategoriesMetadata))]
+    public partial class UoMCategory{ }
 }

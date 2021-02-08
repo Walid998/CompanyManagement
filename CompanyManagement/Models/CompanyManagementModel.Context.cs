@@ -31,5 +31,7 @@ namespace CompanyManagement.Models
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
         public virtual DbSet<ProductDetail> ProductDetails { get; set; }
+        public virtual DbSet<Unit_of_Measures> Unit_of_Measures { get; set; }
+        public virtual DbSet<UoMCategory> UoMCategories { get; set; }
     }
 }

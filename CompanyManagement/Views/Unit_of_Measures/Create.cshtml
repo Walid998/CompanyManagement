@@ -1,0 +1,63 @@
+﻿@model CompanyManagement.Models.Unit_of_Measures
+
+@{
+    ViewBag.Title = "إضافة وحدة قياس";
+}
+
+<h2>إضافة وحدة قياس</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.unit_name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.unit_name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.unit_name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("category_id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.unit_type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select name="unit_type" id="unit_type" class="form-control">
+                    <option value="0" selected hidden> -- </option>
+                    <option value="smaller">اصغر</option>
+                    <option value="reference">الوحدة المرجعية</option>
+                    <option value="bigger">اكبر</option>
+                </select>
+                @Html.ValidationMessageFor(model => model.unit_type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ratio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ratio, new { htmlAttributes = new { @class = "form-control" ,@type="number"} })
+                @Html.ValidationMessageFor(model => model.ratio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="إضافة" class="btn btn-default CreateButton" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("الرجوع الى القائمة", "Index")
+</div>

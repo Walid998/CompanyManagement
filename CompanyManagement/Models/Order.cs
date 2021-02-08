@@ -30,6 +30,8 @@ namespace CompanyManagement.Models
         public Nullable<decimal> rest_amount { get; set; }
         public Nullable<bool> cancelled { get; set; }
         public Nullable<System.DateTime> order_date { get; set; }
+        public string notes { get; set; }
+        public Nullable<decimal> total_vat { get; set; }
     
         public virtual Customer Customer { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

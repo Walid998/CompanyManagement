@@ -41,30 +41,30 @@
 
         @foreach (var item in Model)
         {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.name)
-        </td>
-        <td>
-            @if (item.vat == null)
-            {
-                <span>ــ</span>
-            }
-            else
-            {
-                @Html.DisplayFor(modelItem => item.vat)
-            }
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.code)
-        </td>
-        <td>
-            @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
-            @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
-            @Html.ActionLink("حذف", "Delete", new { id = item.id })
-        </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.name)
+                </td>
+                <td>
+                    @if (item.vat == null)
+                    {
+                        <span>ــ</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.vat)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.code)
+                </td>
+                <td>
+                    @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
+                    @Html.ActionLink("حذف", "Delete", new { id = item.id })
+                </td>
 
-    </tr>
+            </tr>
         }
 
     </table>

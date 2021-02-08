@@ -12,29 +12,25 @@ namespace CompanyManagement.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Product
+    public partial class Unit_of_Measures
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Product()
+        public Unit_of_Measures()
         {
+            this.Products = new HashSet<Product>();
             this.OrderDetails = new HashSet<OrderDetail>();
-            this.Transactions = new HashSet<Transaction>();
-            this.ProductDetails = new HashSet<ProductDetail>();
         }
     
         public int id { get; set; }
-        public string name { get; set; }
-        public Nullable<double> vat { get; set; }
-        public string code { get; set; }
-        public Nullable<int> unit_of_measure { get; set; }
-        public string notes { get; set; }
+        public string unit_name { get; set; }
+        public Nullable<int> category_id { get; set; }
+        public string unit_type { get; set; }
+        public Nullable<double> ratio { get; set; }
     
+        public virtual UoMCategory UoMCategory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Product> Products { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Transaction> Transactions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProductDetail> ProductDetails { get; set; }
-        public virtual Unit_of_Measures Unit_of_Measures { get; set; }
     }
 }

@@ -33,8 +33,10 @@
         <thead>
             <tr>
                 <th>المنتج</th>
-                <th>السعر</th>
                 <th>الكمية</th>
+                <th>وحدة القياس</th>
+                <th>سعر البيع</th>
+                <th>سعر التكلفة</th>
                 <th>discount</th>
                 <th>الاجمالى</th>
             </tr>
@@ -42,13 +44,15 @@
         <tbody>
             @foreach (var item in Model.OrderDetails)
             {
-                <tr>
-                    <td>@Html.DisplayFor(itemmodel => item.Product.name)</td>
-                    <td>@Html.DisplayFor(itemmodel => item.unit_price)</td>
-                    <td>@Html.DisplayFor(itemmodel => item.quantity)</td>
-                    <td>@Html.DisplayFor(itemmodel => item.discount)%</td>
-                    <td>@Html.DisplayFor(itemmodel => item.total_price)</td>
-                </tr>
+            <tr>
+                <td>@Html.DisplayFor(itemmodel => item.Product.name)</td>
+                <td>@Html.DisplayFor(itemmodel => item.quantity)</td>
+                <td>@Html.DisplayFor(itemmodel => item.Unit_of_Measures.unit_name)</td>
+                <td>@Html.DisplayFor(itemmodel => item.sale_price)</td>
+                <td>@Html.DisplayFor(itemmodel => item.cost_price)</td>
+                <td>@Html.DisplayFor(itemmodel => item.discount)%</td>
+                <td>@Html.DisplayFor(itemmodel => item.total_price)</td>
+            </tr>
             }
         </tbody>
     </table>

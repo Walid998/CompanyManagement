@@ -62,6 +62,7 @@ textarea {
 .listnav a:hover {
     background-color: #5a0081;
 }
+
 .listnav li{
     font-size: 17px;
 }
@@ -117,11 +118,23 @@ textarea {
     font-size:15px;
     margin-right:20px
 }
-
+/***  Order   ***********************/
 .orderfieldset, .orderfieldset_base {
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid #cccccc;
     background-color: #fff;
     border-radius: 5px;
+}
+
+#addCustmoer, #AddProduct {
+    cursor: pointer;
+    color: #007bff;
+}
+#addCustmoer:hover, #AddProduct:hover {
+    text-decoration: underline;
+}
+
+#calcolumns {
+    background-color: #f5f5f5;
 }

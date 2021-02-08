@@ -19,7 +19,7 @@ namespace CompanyManagement.Controllers
         public ActionResult Index()
         {
             return View(db.Customers.ToList());
-        }
+        } // X
 
         public PartialViewResult SearchCustomers(string ClientName)
         {
@@ -48,7 +48,7 @@ namespace CompanyManagement.Controllers
         public ActionResult Create()
         {
             return View();
-        }
+        }// X
 
         // POST: Customers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

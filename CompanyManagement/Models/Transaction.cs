@@ -16,12 +16,12 @@ namespace CompanyManagement.Models
     {
         public int id { get; set; }
         public Nullable<int> product_id { get; set; }
-        public Nullable<int> balance { get; set; }
-        public Nullable<int> income { get; set; }
-        public Nullable<int> outcome { get; set; }
-        public Nullable<decimal> unit_cost { get; set; }
         public Nullable<System.DateTime> move_date { get; set; }
         public string order_id { get; set; }
+        public Nullable<double> balance { get; set; }
+        public Nullable<double> income { get; set; }
+        public Nullable<double> outcome { get; set; }
+        public Nullable<decimal> sale_price { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

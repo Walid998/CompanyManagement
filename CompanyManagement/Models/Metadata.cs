@@ -15,15 +15,19 @@ namespace CompanyManagement.Models
         [StringLength(50, ErrorMessage = "يجب ألا يزيد كود المنتج عن 50 حرف")]
         [Display(Name = "كود المنتج")]
         public string code { get; set; }
+        [Display(Name ="وحدة القياس")]
+        public int unit_of_measure { get; set; }
+        [Display(Name ="ملاحظات")]
+        public string notes { get; set; }
     }
     public class ProductDetailsMetadata
     {
         [Display(Name = "اسم المنتج")]
         public int product_id { get; set; }
-        [Display(Name = "السعر")]
-        public Nullable<decimal> unit_price { get; set; }
+        [Display(Name = "سعر البيع")]
+        public Nullable<decimal> sale_price { get; set; }
         [Display(Name = "الكمية")]
-        public Nullable<int> quantity { get; set; }
+        public Nullable<double> quantity { get; set; }
         [Display(Name = "الاجمالى")]
         public Nullable<decimal> total_price { get; set; }
     }
@@ -41,12 +45,15 @@ namespace CompanyManagement.Models
         [Display(Name = "الاجمالى")]
         public Nullable<decimal> total_payment { get; set; }
         [Display(Name = "المدفوع")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "هذا الحقل مطلوب")]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "هذا الحقل مطلوب")]
         public Nullable<decimal> payment_amount { get; set; }
         [Display(Name = "المتبقى")]
         public Nullable<decimal> rest_amount { get; set; }
         [Display(Name = "التاريخ")]
         public Nullable<System.DateTime> order_date { get; set; }
+        [Display(Name = "ملاحظات")]
+        public string notes { get; set; }
+
     }
     public class OrderDetailsMetadata
     {
@@ -54,16 +61,18 @@ namespace CompanyManagement.Models
         public string order_id { get; set; }
         [Display(Name = "اسم المنتج")]
         public int product_id { get; set; }
-        [Display(Name = "السعر")]
-        public Nullable<decimal> unit_price { get; set; }
+        [Display(Name = "سعر البيع")]
+        public Nullable<decimal> sale_price { get; set; }
+        [Display(Name = "سعر التكلفة")]
+        public Nullable<decimal> cost_price { get; set; }
         [Display(Name = "الكمية")]
-        public Nullable<int> quantity { get; set; }
+        public Nullable<double> quantity { get; set; }
         [Display(Name = "discount")]
         public Nullable<double> discount { get; set; }
         [Display(Name = "الاجمالى")]
         public Nullable<decimal> total_price { get; set; }
         [Display(Name = "التاريخ")]
-        public Nullable<System.DateTime> order_data { get; set; }
+        public Nullable<System.DateTime> order_date { get; set; }
     }
     public class CustomerMetadata
     {
@@ -75,6 +84,8 @@ namespace CompanyManagement.Models
         public string email { get; set; }
         [Display(Name = "نوع العميل")]
         public string type { get; set; }
+        [Display(Name = "ملاحظات")]
+        public string notes { get; set; }
     }
 
     public class TransactionsMetadata
@@ -84,16 +95,34 @@ namespace CompanyManagement.Models
         [Display(Name = "المنتج")]
         public Nullable<int> product_id { get; set; }
         [Display(Name = "الرصيد")]
-        public Nullable<int> balance { get; set; }
+        public Nullable<double> balance { get; set; }
         [Display(Name = "الوارد")]
-        public Nullable<int> income { get; set; }
+        public Nullable<double> income { get; set; }
         [Display(Name = "الصادر")]
-        public Nullable<int> outcome { get; set; }
-        [Display(Name = "التكلفة")]
-        public Nullable<decimal> unit_cost { get; set; }
+        public Nullable<double> outcome { get; set; }
+        [Display(Name = "سعر البيع")]
+        public Nullable<decimal> sale_price { get; set; }
         [Display(Name = "التاريخ")]
         public Nullable<System.DateTime> move_date { get; set; }
         [Display(Name = "البيان")]
         public string order_id { get; set; }
     }
+
+    public class UoMCategoriesMetadata
+    {
+        [Display(Name ="الفئة")]
+        public string name { get; set; }
+    }
+    public class UnitOfMeasureMetadata
+    {
+        [Display(Name ="وحدة القياس")]
+        public string unit_name { get; set; }
+        [Display(Name = "فئة")]
+        public Nullable<int> category_id { get; set; }
+        [Display(Name = "النوع")]
+        public string unit_type { get; set; }
+        [Display(Name = "النسبة")]
+        public Nullable<double> ratio { get; set; }
+    }
+
 }

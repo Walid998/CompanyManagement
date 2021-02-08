@@ -21,18 +21,40 @@ namespace CompanyManagement.Controllers
             var Orders = db.Orders.Where(o => o.custom_order_id.StartsWith(OrderID));
             return PartialView("_Orders",Orders);
         }
+        
         public JsonResult GetProductPrice(int productId)
         {
+            Product Product = null;
+            IQueryable<Unit_of_Measures> product_uom;
+            List<Object[]> uom = null;
             try
             {
-                var product = db.ProductDetails.OrderBy(s => s.date_of_buy).First(s => s.product_id == productId && s.quantity > 0);
-                Object[] product_data = new Object[] {product.unit_price,product.quantity };
-                return Json(product_data, JsonRequestBehavior.AllowGet);
+                Product = db.Products.Find(productId);
+                product_uom = db.Unit_of_Measures.Where(u => u.category_id == Product.Unit_of_Measures.category_id);
+                uom = new List<object[]>();
+                foreach (var unit in product_uom)
+                {
+                    uom.Add(new Object[] { unit.id, unit.unit_name });
+                }
             }
-            catch(Exception e)
+            catch (NullReferenceException e) { }
+            // GetUom
+            ProductDetail product;
+            Object[] product_data = null;
+            try
             {
-                return null;
-            } 
+                product = db.ProductDetails.OrderBy(s => s.date_of_buy).First(s => s.product_id == productId && s.quantity > 0);
+                if(product != null)
+                    product_data = new Object[] {product.sale_price,product.quantity };
+            }
+            catch{ }
+            return Json(new
+            {
+                prop1 = product_data,
+                prop2 = uom,
+                prop3 = Product.vat
+            }
+                , JsonRequestBehavior.AllowGet);
         }
         public JsonResult IsOrderIdFounded(string orderId)
         {
@@ -52,7 +74,7 @@ namespace CompanyManagement.Controllers
         }
 
         // GET: Create
-        public ActionResult Create()
+        public ActionResult CreatePurchaseOrder()
         {
             OrderViewModel order = new OrderViewModel() {
                 OrderType = new string[] { "بيع", "شراء" },
@@ -60,6 +82,18 @@ namespace CompanyManagement.Controllers
                 Products = db.Products.ToList()
             };
             
+            return View(order);
+        }
+
+        public ActionResult CreateSalesOrder()
+        {
+            OrderViewModel order = new OrderViewModel()
+            {
+                OrderType = new string[] { "بيع", "شراء" },
+                Customers = db.Customers.ToList(),
+                Products = db.Products.ToList()
+            };
+
             return View(order);
         }
         [HttpPost]

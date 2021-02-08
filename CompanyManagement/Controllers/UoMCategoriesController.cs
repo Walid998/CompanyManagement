@@ -10,117 +10,107 @@ using CompanyManagement.Models;
 
 namespace CompanyManagement.Controllers
 {
-    public class ProductsController : Controller
+    public class UoMCategoriesController : Controller
     {
         private CompanyManagmentEntities db = new CompanyManagmentEntities();
 
-        public PartialViewResult SearchProduct(string ProductName)
-        {
-            var products = db.Products.Where(p => p.name.StartsWith(ProductName));
-            return PartialView("_Products",products);
-        }
-        // GET: Products
+        // GET: UoMCategories
         public ActionResult Index()
         {
-            var products = db.Products.ToList();
-            return View(products);
+            return View(db.UoMCategories.ToList());
         }
 
-        // GET: Products/Details/5
+        // GET: UoMCategories/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
-            if (product == null)
+            UoMCategory uoMCategory = db.UoMCategories.Find(id);
+            if (uoMCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(uoMCategory);
         }
 
-        // GET: Products/Create
+        // GET: UoMCategories/Create
         public ActionResult Create()
         {
-            ViewBag.unit_of_measure = new SelectList(db.Unit_of_Measures, "id", "unit_name");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: UoMCategories/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,name,vat,code,unit_of_measure")] Product product)
+        public ActionResult Create([Bind(Include = "name")] UoMCategory uoMCategory)
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
+                db.UoMCategories.Add(uoMCategory);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.id = new SelectList(db.ProductDetails, "product_id", "product_id", product.id);
-            return View(product);
+            return View(uoMCategory);
         }
 
-        // GET: Products/Edit/5
+        // GET: UoMCategories/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
-            ViewBag.unit_of_measure = new SelectList(db.Unit_of_Measures, "id", "unit_name",product.unit_of_measure);
-
-            if (product == null)
+            UoMCategory uoMCategory = db.UoMCategories.Find(id);
+            if (uoMCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(uoMCategory);
         }
 
-        // POST: Products/Edit/5
+        // POST: UoMCategories/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,name,vat,code,unit_of_measure")] Product product)
+        public ActionResult Edit([Bind(Include = "name")] UoMCategory uoMCategory)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(product).State = EntityState.Modified;
+                db.Entry(uoMCategory).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View(uoMCategory);
         }
 
-        // GET: Products/Delete/5
+        // GET: UoMCategories/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
-            if (product == null)
+            UoMCategory uoMCategory = db.UoMCategories.Find(id);
+            if (uoMCategory == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(uoMCategory);
         }
 
-        // POST: Products/Delete/5
+        // POST: UoMCategories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = db.Products.Find(id);
-            db.Products.Remove(product);
+            UoMCategory uoMCategory = db.UoMCategories.Find(id);
+            db.UoMCategories.Remove(uoMCategory);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -132,26 +122,6 @@ namespace CompanyManagement.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        // ============================================
-        // Create Product: Ajax
-        [HttpPost]
-        public JsonResult CreateProduct([Bind(Include = "name,vat,code")] Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Products.Add(product);
-                db.SaveChanges();
-                return Json(product);
-            }
-            return null;
-        }
-
-        // ============================================
-        public ActionResult UoMCategories()
-        {
-            return View(db.UoMCategories.ToList());
         }
     }
 }

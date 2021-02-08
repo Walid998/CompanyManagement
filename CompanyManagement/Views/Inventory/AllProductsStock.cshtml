@@ -9,7 +9,7 @@
     <thead class="thead-light">
         <tr>
             <th>المنتج</th>
-            <th>السعر</th>
+            <th>سعر الشراء</th>
             <th>الكمية</th>
             <th>القيمة</th>
             <th>التاريخ</th>
@@ -22,13 +22,13 @@
         var x = item.Value.Count + 1;
         <tr class="font-weight-bold">
             <td rowspan="@x">
-                <a href="/Inventory/ProductCard/@item.Value[0].product_id">@item.Key</a>
+                <a href="/Inventory/ProductTransactions/@item.Value[0].product_id">@item.Key</a>
             </td>
         </tr>
         foreach (var itm in item.Value)
         {
             <tr style="background-color:#fefefe">
-                <td>@itm.unit_price</td>
+                <td>@itm.cost_price</td>
                 <td>@itm.quantity</td>
                 <td>@itm.total_price</td>
                 <td>@itm.date_of_buy</td>
