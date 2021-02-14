@@ -43,6 +43,7 @@ namespace CompanyManagement.Models
                 orderDetail.quantity = item.quantity;
                 orderDetail.uom_id = item.uom_id;
                 orderDetail.discount = item.discount;
+                orderDetail.vat = item.vat;
                 orderDetail.total_price = item.total_price;
                 db.OrderDetails.Add(orderDetail);
                 db.SaveChanges();

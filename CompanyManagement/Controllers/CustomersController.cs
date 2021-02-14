@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -19,15 +20,13 @@ namespace CompanyManagement.Controllers
         public ActionResult Index()
         {
             return View(db.Customers.ToList());
-        } // X
+        } 
 
         public PartialViewResult SearchCustomers(string ClientName)
         {
             var customers = db.Customers.Where(c => c.name.StartsWith(ClientName)).ToList();
             return PartialView("_Customers", customers);
         }
-
-
 
         // GET: Customers/Details/5
         public ActionResult Details(int? id)
@@ -43,85 +42,47 @@ namespace CompanyManagement.Controllers
             }
             return View(customer);
         }
-
-        // GET: Customers/Create
-        public ActionResult Create()
-        {
-            return View();
-        }// X
-
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // Create Customer: Ajax
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,name,phone,email,type")] Customer customer)
+        public JsonResult CreateCustomer([Bind(Include = "name,phone,email,type")] Customer customer)
         {
             if (ModelState.IsValid)
             {
                 db.Customers.Add(customer);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(customer);
             }
-
-            return View(customer);
+            return null;
         }
 
-        // GET: Customers/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
-        }
-
-        // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,name,phone,email,type")] Customer customer)
+        //[ValidateAntiForgeryToken]
+        public JsonResult Edit([Bind(Include = "id,name,phone,email,type")] Customer customer)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(customer).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(customer);
             }
-            return View(customer);
-        }
-
-        // GET: Customers/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Customer customer = db.Customers.Find(id);
-            if (customer == null)
-            {
-                return HttpNotFound();
-            }
-            return View(customer);
+            return null;
         }
 
         // POST: Customers/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        //[ValidateAntiForgeryToken]
+        public JsonResult DeleteConfirmed(int id)
         {
             Customer customer = db.Customers.Find(id);
-            db.Customers.Remove(customer);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Customers.Remove(customer);
+                db.SaveChanges();
+                return Json(true);
+            }catch(DbUpdateException ex)
+            {
+                return null;
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -131,19 +92,6 @@ namespace CompanyManagement.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        // Create Customer: Ajax
-        [HttpPost]
-        public JsonResult CreateCustomer([Bind(Include ="name,phone,email,type")] Customer customer)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Customers.Add(customer);
-                db.SaveChanges();
-                return Json(customer);
-            }
-            return null;
         }
     }
 }

@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>@ViewBag.Title</title>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+        <div class="d-flex" id="wrapper">
+            <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light border-bottom">
+                @*<button class="btn btn-secondary" id="menu-toggle"><i class="fa fa-bars" style="font-size:26px"></i></button>*@
+                <i id="menu-toggle" class="fa fa-indent" style="font-size:26px"></i>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Sign Up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Ali</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper" style="padding-top:40px;direction:rtl">
+                <div class="container-fluid">
+                    <div class="row">
+                        <nav class="d-md-block bg-light sidebar" style="width: 230px" id="sidebar-wrapper">
+                            <div class="sidebar-sticky" style="padding-top: 6px;">
+                                <h6 class="dropdown-header" onclick="hidelist('#orders')">الفواتير</h6>
+                                <div class="list-group" id="orders">
+                                    <a href="/Orders/Index" class="list-group-item list-group-item-action">عرض الفواتير</a>
+                                    <a href="/Orders/CreatePurchaseOrder" class="list-group-item list-group-item-action">فاتورة شراء</a>
+                                    <a href="/Orders/CreateSalesOrder" class="list-group-item list-group-item-action">فاتورة بيع</a>
+                                </div>
+                                <h6 class="dropdown-header" onclick="hidelist('#inventory')">المخزون</h6>
+                                <div class="list-group" id="inventory">
+                                    <a href="/Products/Index" class="list-group-item list-group-item-action">المنتجات</a>
+                                    <a href="/Inventory/AllProductsStock" class="list-group-item list-group-item-action">الجرد</a>
+                                    <a href="/Unit_of_Measures/Index" class="list-group-item list-group-item-action">وحدات القياس</a>
+                                </div>
+                                <h6 class="dropdown-header" onclick="hidelist('#clients')">العملاء</h6>
+                                <div class="list-group" id="clients">
+                                    <a href="/Customers/Index" class="list-group-item list-group-item-action">عرض العملاء</a>
+                                </div>
+                            </div>
+                        </nav>
+                        <main class="col-md-12">
+                            <div class="pt-4 pb-2 pl-2 pr-2 mb-3" style="direction:rtl;text-align:center">
+                                @RenderBody()
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+            <!-- /#page-content-wrapper -->
+
+        </div>
+        <!-- /#wrapper -->
+        <!-- Bootstrap core JavaScript -->
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+        <!-- Menu Toggle Script -->
+        <script type="text/javascript">
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+            function hidelist(listId) {
+                if ($(listId).css("display") == "none") {
+                    $(listId).css("display", "unset")
+                } else {
+                    $(listId).css("display", "none");
+                }
+                
+            }
+        </script>
+
+    </body>
+</html>

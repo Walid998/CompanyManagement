@@ -3,7 +3,38 @@
     ViewBag.Title = "حركة صنف - " + Model[0].Product.name;
 }
 
-<h2>حركة صنف: @Model[0].Product.name</h2>
+<h2>حركة : @Model[0].Product.name</h2>
+<hr />
+<div id="Search" style="margin:0px">
+    @using (Ajax.BeginForm("SearchTransactions", "Inventory", new AjaxOptions()
+    {
+        UpdateTargetId = "ContentGrid",
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace
+    }, new { @style = "display:inline", @id = "searchForm" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="row">
+        <input type="hidden" name="id" value="@Model[0].Product.id" />
+        <div class="col-4">
+            <div class="input-group">
+                <label class="control-label ml-2">من</label>
+                <input class="form-control" id="From_date" type="date" onchange="Search()" name="From_date">
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="input-group">
+                <label class="control-label ml-2">الى</label>
+                <input class="form-control" id="To_date" type="date" onchange="Search()" name="To_date">
+            </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-secondary" type="button" onclick="ClearD()">clear</button>
+        </div>
+    </div>
+        
+    }
+</div>
 <hr />
 <table class="table table-bordered">
     <thead class="thead-light">
@@ -16,7 +47,7 @@
             <th>البيان</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="ContentGrid">
         @foreach (var tran in Model)
         {
             <tr>
@@ -34,4 +65,14 @@
         }
     </tbody>
 </table>
-
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    function Search() {
+        $("#searchForm").submit();
+    }
+    function ClearD() {
+        $("#From_date").val('');
+        $("#To_date").val('');
+        Search();
+    }
+</script>

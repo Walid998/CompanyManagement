@@ -1,7 +1,8 @@
 ﻿body {
     margin:0px;
     padding:0px;
-    font-family:'Arial Unicode MS'
+    /*font-family:'Arial Unicode MS'*/
+    /*font-family:'Franklin Gothic Medium', 'Arial Narrow'*/
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -81,7 +82,24 @@ textarea {
     border-radius:0px;
     text-align:center
 }
+/* layout3 sidebar */
+.sidebar-sticky h6 {
+    padding-left: 11px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    color: #3f4346;
+    border-bottom:1px solid #cccccc;
+    cursor:pointer;
+}
+.sidebar-sticky a{
+    text-align:center;
+    font-size:16px;
+}
 
+#menu-toggle:hover {
+    color:#626262
+}
 /* Content of Layout */
 #content {
     background-color: #fafafa;
@@ -116,7 +134,15 @@ textarea {
 
 #AddNew{
     font-size:15px;
-    margin-right:20px
+    margin-right:20px;
+    color:white;
+}
+/* Manipulation - Entity Card */
+#EntityControl {
+    display: inline;
+    
+    color: white;
+    margin-right: 10px;
 }
 /***  Order   ***********************/
 .orderfieldset, .orderfieldset_base {

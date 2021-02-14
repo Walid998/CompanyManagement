@@ -12,16 +12,13 @@
         UpdateTargetId = "ContentGrid",
         HttpMethod = "post",
         InsertionMode = InsertionMode.Replace
-    },new { @style="display:inline"}))
+    }, new { @style = "display:inline",@id="searchForm" }))
     {
         @Html.AntiForgeryToken()
-    <div class="input-group mb-3">
-        <input type="text" class="form-control SearchInput" name="ClientName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
-        <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
+        <div class="input-group mb-3">
+            <input type="text" class="form-control SearchInput" onkeyup="Search()" name="ClientName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+            <a class="btn btn-secondary" onclick="AddCustomer()" id="AddNew"><i class="fa fa-plus-square"></i> إضافة عميل</a>
         </div>
-        <a href="/Customers/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة عميل</a>
-    </div>
     }
 
 
@@ -42,14 +39,13 @@
             <th>
                 @Html.DisplayNameFor(model => model.type)
             </th>
-            <th></th>
         </tr>
 
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.name)
+                    @Html.ActionLink(item.name, "Details", new { id = item.id })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.phone)
@@ -60,13 +56,96 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.type)
                 </td>
-                <td>
-                    @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
-                    @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
-                    @Html.ActionLink("حذف", "Delete", new { id = item.id })
-                </td>
             </tr>
         }
 
     </table>
 </div>
+<div class="modal fade" id="AddCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">إضافة عميل جديد</h5>
+            </div>
+            <form id="AddCustomerForm">
+                <div class="modal-body" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="Customer_Name" class="col-12 form-control text-center" placeholder="أسم العميل" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="Customer_Phone" class="col-12 form-control text-center" placeholder="الهاتف" style="direction:ltr" />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="Customer_Email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" required />
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <select name="type" id="Customer_Type" class="col-12 form-control">
+                            <option value="0" selected hidden>اختار نوع العميل -- </option>
+                            <option value="مورد">مورد</option>
+                            <option value="زبون">زبون</option>
+                            <option value="مورد/زبون">مورد / زبون</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseAddCustomerModal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AddCustomerForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmAddCustomer();
+        })
+    });
+    function Search() {
+        $("#searchForm").submit();
+    }
+    function AddCustomer() {
+        $("#AddCustomerModal").appendTo("body").modal("show");
+    }
+    function ConfirmAddCustomer() {
+        var Customer = {}
+        Customer.name = $("#Customer_Name").val();
+        Customer.phone = $("#Customer_Phone").val();
+        Customer.email = $("#Customer_Email").val();
+        Customer.type = $("#Customer_Type").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/Customers/CreateCustomer",
+            data: JSON.stringify(Customer),
+            success: function (data) {
+                $("#CloseAddCustomerModal").click();
+                var newCustomer =
+                    "<tr><td>"
+                    + "<a href='/Customers/Details/" + data.id + "'>" + data.name+"</a>"
+                    + "</td><td>"
+                    + data.phone
+                    + "</td><td>"
+                    + data.email
+                    + "</td><td>"
+                    + data.type
+                    + "</td></tr>";
+                $("table").append(newCustomer);
+                ResetAddCustomerForm();
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حفظ البيانات");
+            }
+        });
+    }
+    function ResetAddCustomerForm() {
+        $("#Customer_Name").val('');
+        $("#Customer_Phone").val('');
+        $("#Customer_Email").val('');
+        $("#Customer_Type").val('');
+    }
+</script>

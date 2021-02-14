@@ -24,6 +24,7 @@ namespace CompanyManagement.Models
         public Nullable<System.DateTime> order_date { get; set; }
         public Nullable<decimal> sale_price { get; set; }
         public Nullable<decimal> cost_price { get; set; }
+        public Nullable<double> vat { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual Product Product { get; set; }

@@ -12,14 +12,14 @@
         UpdateTargetId = "ContentGrid",
         HttpMethod = "post",
         InsertionMode = InsertionMode.Replace
-    }, new { @style = "display:inline" }))
+    }, new { @style = "display:inline", @id = "searchForm" }))
     {
         @Html.AntiForgeryToken()
         <div class="input-group mb-3">
-            <input type="text" class="form-control SearchInput" name="OrderID" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
-            <div class="input-group-prepend">
+            <input type="text" class="form-control SearchInput" onkeyup="Search()" name="OrderID" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+            @*<div class="input-group-prepend">
                 <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
-            </div>
+            </div>*@
             <a href="/Orders/CreatePurchaseOrder" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> فاتورة جديدة</a>
         </div>
     }
@@ -73,3 +73,9 @@
 
     </table>
 </div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    function Search() {
+        $("#searchForm").submit();
+    }
+</script>

@@ -1,9 +1,44 @@
 ﻿@model Dictionary<string, List<CompanyManagement.Models.ProductDetail>>
 @{
     ViewBag.Title = "المخزون";
+    Layout = "~/Views/Shared/_Layout3.cshtml";
 }
 
 <h2>المخزون</h2>
+<hr />
+<div id="Search" style="margin:0px">
+    @using (Ajax.BeginForm("SearchProducts", "Inventory", new AjaxOptions()
+    {
+        UpdateTargetId = "ContentGrid",
+        HttpMethod = "post",
+        InsertionMode = InsertionMode.Replace
+    }, new { @style = "display:inline", @id = "searchForm" }))
+    {
+        @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-4" style="border-left: 1px solid #cccccc">
+            <input type="text" class="form-control SearchInput" onkeyup="Search()" name="ProductName" id="ProductName" placeholder="بحث بإسم المنتج ..">
+        </div>
+        <div class="col-3">
+            <div class="input-group">
+                <label class="control-label ml-2">من</label>
+                <input class="form-control" type="date" onchange="Search()" name="From_date"id="From_date">
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="input-group">
+                <label class="control-label ml-2">الى</label>
+                <input class="form-control" type="date" onchange="Search()" name="To_date"id="To_date">
+            </div>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-secondary" type="button" onclick="ClearD()">clear</button>
+        </div>
+    </div>
+    }
+
+
+</div>
 <hr />
 <table class="table table-bordered">
     <thead class="thead-light">
@@ -15,25 +50,39 @@
             <th>التاريخ</th>
         </tr>
     </thead>
-    @if (Model.Count > 0)
-    {
-    foreach (var item in Model)
-    {
-        var x = item.Value.Count + 1;
-        <tr class="font-weight-bold">
-            <td rowspan="@x">
-                <a href="/Inventory/ProductTransactions/@item.Value[0].product_id">@item.Key</a>
-            </td>
-        </tr>
-        foreach (var itm in item.Value)
+    <tbody id="ContentGrid">
+        @if (Model.Count > 0)
         {
-            <tr style="background-color:#fefefe">
-                <td>@itm.cost_price</td>
-                <td>@itm.quantity</td>
-                <td>@itm.total_price</td>
-                <td>@itm.date_of_buy</td>
-            </tr>
+            foreach (var item in Model)
+            {
+                var x = item.Value.Count + 1;
+                <tr class="font-weight-bold">
+                    <td rowspan="@x">
+                        <a href="/Inventory/ProductTransactions/@item.Value[0].product_id">@item.Key</a>
+                    </td>
+                </tr>
+                foreach (var itm in item.Value)
+                {
+                    <tr style="background-color:#fefefe">
+                        <td>@itm.cost_price</td>
+                        <td>@itm.quantity</td>
+                        <td>@itm.total_price</td>
+                        <td>@itm.date_of_buy</td>
+                    </tr>
+                }
+            }
         }
-    }
-    }
+    </tbody>
 </table>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    function Search() {
+        $("#searchForm").submit();
+    }
+    function ClearD() {
+        $("#ProductName").val('');
+        $("#From_date").val('');
+        $("#To_date").val('');
+        Search();
+    }
+</script>

@@ -1,48 +1,188 @@
-﻿@model CompanyManagement.Models.Product
+﻿@model CompanyManagement.Models.ProductViewModel
 
 @{
-    ViewBag.Title = "التفاصيل";
+    ViewBag.Title = "بيانات - " + Model.Product.name;
 }
 
-<h2>التفاصيل عن المنتج "@Html.DisplayFor(p => p.name)"</h2>
+
+<h4><i class="fa fa-info-circle"></i> بيانات - <span id="ProductNameHeader">@Html.DisplayFor(model => model.Product.name)</span></h4>
 
 <div>
     <hr />
+    <input type="hidden" id="ProductId" value="@Model.Product.id" />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.code)
+            @Html.DisplayNameFor(model => model.Product.code)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.code)
+        <dd id="Product_Code">
+            @Html.DisplayFor(model => model.Product.code)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.name)
+            @Html.DisplayNameFor(model => model.Product.name)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.name)
+        <dd id="Product_Name">
+            @Html.DisplayFor(model => model.Product.name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.vat)
+            @Html.DisplayNameFor(model => model.Product.unit_of_measure)
         </dt>
 
         <dd>
-            @if (Model.vat == null)
+            <span id="Product_Uom_Text">@Html.DisplayFor(model => model.Product.Unit_of_Measures.unit_name)</span>
+            <input type="hidden" value="@Model.Product.unit_of_measure" id="Product_Uom" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.vat)
+        </dt>
+
+        <dd>
+            @if (Model.Product.vat == null)
             {
                 <span>لا يوجد</span>
             }
             else
             {
-                @Html.DisplayFor(model => model.vat)<span>%</span>
+                <span id="Product_Vat">@Html.DisplayFor(model => model.Product.vat)</span><span>%</span>
             }
         </dd>
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
+<hr />
+<a class="btn btn-primary" onclick="EditProductModal()" id="EntityControl">تعديل</a>
+<a class="btn btn-danger" onclick="DeleteProductModal()" id="EntityControl">حذف</a>
+@*<p>
     @Html.ActionLink("الرجوع الى القائمة", "Index")
-</p>
+</p>*@
 
+<div class="modal fade" id="EditProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="col-12 modal-title text-center" id="exampleModalLongTitle">إضافة منتج جديد</h5>
+            </div>
+            <form id="EditForm">
+                <div class="col-12 modal-body text-center" style="direction:rtl;">
+                    <div class="form-group">
+                        <input type="text" id="ProductModal_Code" class="col-12 form-control text-center" placeholder="كود المنتج" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="ProductModal_Name" class="col-12 form-control text-center" placeholder="اسم المنتج" />
+                    </div>
+                    <div class="form-group">
+                        <select class="col-12 form-control text-center" id="ProductModal_Uom">
+                            @foreach (var item in Model.Uoms)
+                            {
+                                <option value="@item.id">@item.unit_name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="ProductModal_Vat" class="col-12 form-control text-center" placeholder="القيمة المضافة" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_pro">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteProductModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="direction:rtl;float:right">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد حذف بيانات - @Model.Product.name ؟</h5>
+            </div>
+            <div class="modal-footer">
+                <form id="DeleteForm">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").on("submit", function (e) {
+            e.preventDefault();
+        });
+        $("#EditForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmEditProduct();
+        })
+        $("#DeleteForm").on("submit", function (e) {
+            ConfirmDeleteProduct();
+        })
+    });
+    function EditProductModal() {
+        $("#ProductModal_Code").val($("#Product_Code").text().trim());
+        $("#ProductModal_Name").val($("#Product_Name").text().trim());
+        $("#ProductModal_Uom").val($("#Product_Uom").val().trim());
+        $("#ProductModal_Vat").val($("#Product_Vat").text().trim());
+
+        $("#EditProductModal").appendTo("body").modal("show");
+    }
+    function DeleteProductModal() {
+        $("#DeleteProductModal").appendTo("body").modal("show");
+    }
+    function ConfirmEditProduct() {
+        var Product = {};
+        Product.id = $("#ProductId").val();
+        Product.code = $("#ProductModal_Code").val();
+        Product.name = $("#ProductModal_Name").val();
+        Product.unit_of_measure = $("#ProductModal_Uom").val();
+        Product.vat = $("#ProductModal_Vat").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/Products/Edit",
+            data: JSON.stringify(Product),
+            success: function (data) {
+                $("#CloseModal_pro").click();
+                $("#ProductNameHeader").text(data.name);
+                $("#Product_Code").text(data.code);
+                $("#Product_Name").text(data.name);
+                $("#Product_Uom").val(data.unit_of_measure);
+                $("#Product_Uom_Text").text($("#ProductModal_Uom option[value='" + data.unit_of_measure + "']").text());
+                $("#Product_Vat").text(data.vat);
+                alert("تم تعديل البيانات بنجاح");
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء تعديل البيانات");
+            }
+        });
+    }
+
+    function ConfirmDeleteProduct() {
+        var id = parseInt($("#ProductId").val());
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            url: "/Products/Delete",
+            success: function (data) {
+                if (data == true) {
+                    window.location.replace("/Products/Index");
+                } else {
+                    alert("لا يمكن حذف بيانات هذا المنتج لأرتباطه ببيانات اخرى فى النظام");
+                }
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء مسح البيانات");
+            }
+        });
+    }
+</script>

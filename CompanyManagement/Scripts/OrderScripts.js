@@ -244,6 +244,7 @@ function PlaceAnOrder(InvoiceType) {
             SingleOrderDetails.discount = parseFloat($(this).find("td:eq(5)").text());
         else
             SingleOrderDetails.cost_price = parseFloat($(this).find("td:eq(5)").text());
+        SingleOrderDetails.vat = parseFloat($(this).find("td:eq(6)").text());
         SingleOrderDetails.total_price = parseFloat($(this).find("td:eq(7)").text());
         SingleOrderDetails.uom_id = parseInt($(this).find("td:eq(9)").text());
         SingleOrderDetails.order_date = $("#order_date").val();

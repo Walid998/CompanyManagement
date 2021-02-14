@@ -22,20 +22,21 @@
                     <li><a href="/Orders/CreatePurchaseOrder"><i class="fa fa-angle-double-left"></i>  فاتورة شراء</a></li>
                     <li><a href="/Orders/CreateSalesOrder"><i class="fa fa-angle-double-left"></i>  فاتورة بيع</a></li>
                 </ul>
-                <a href="/Customers/Index">العملاء</a>
+
                 @*<a href="#ClientSubmenu" data-toggle="collapse" aria-expanded="false">العملاء <i class="fa fa-sort-down" style="margin-right:10px"></i></a>
         <ul class="list-unstyled collapse" id="ClientSubmenu">
             <li><a href="/Customers/Create"><i class="fa fa-angle-double-left"></i>  عميل جديد</a></li>
             <li><a href="/Customers/Index"><i class="fa fa-angle-double-left"></i>  عرض العملاء</a></li>
         </ul>*@
                 @*<a href="/Inventory/AllProductsStock">المخزون</a>
-                <a href="/Products/Index">المنتجات</a>*@
+        <a href="/Products/Index">المنتجات</a>*@
                 <a href="#InventorySubmenu" data-toggle="collapse" aria-expanded="false">المخزون <i class="fa fa-sort-down" style="margin-right:10px"></i></a>
-        <ul class="list-unstyled collapse" id="InventorySubmenu">
-            <li><a href="/Inventory/AllProductsStock"><i class="fa fa-angle-double-left"></i>  الجرد</a></li>
-            <li><a href="/Products/Index"><i class="fa fa-angle-double-left"></i>  المنتجات</a></li>
-            <li><a href="/Unit_of_Measures/Index"><i class="fa fa-angle-double-left"></i>  الوحدات</a></li>
-        </ul>
+                <ul class="list-unstyled collapse" id="InventorySubmenu">
+                    <li><a href="/Inventory/AllProductsStock"><i class="fa fa-angle-double-left"></i>  الجرد</a></li>
+                    <li><a href="/Products/Index"><i class="fa fa-angle-double-left"></i>  المنتجات</a></li>
+                    <li><a href="/Unit_of_Measures/Index"><i class="fa fa-angle-double-left"></i>  الوحدات</a></li>
+                </ul>
+                <a href="/Customers/Index">العملاء</a>
             </div>
             <div class="logout">
                 @using (Html.BeginForm("", "")) {

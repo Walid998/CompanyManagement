@@ -119,6 +119,21 @@ namespace CompanyManagement.Controllers
             else
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest); 
         }
-        
+        [HttpPost]
+        public JsonResult ConfirmOrder(string id)
+        {
+            var order = db.Orders.Find(id);
+            order.cancelled = false;
+            db.SaveChanges();
+            return Json(id);
+        }
+        [HttpPost]
+        public JsonResult CancelOrder(string id)
+        {
+            var order = db.Orders.Find(id);
+            order.cancelled = true;
+            db.SaveChanges();
+            return Json(id);
+        }
     }
 }

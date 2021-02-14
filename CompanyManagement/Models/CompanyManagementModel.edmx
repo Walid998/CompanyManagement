@@ -30,6 +30,7 @@
           <Property Name="order_date" Type="datetime" />
           <Property Name="sale_price" Type="decimal" Precision="18" Scale="2" />
           <Property Name="cost_price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="vat" Type="float" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -380,6 +381,7 @@
           <Property Name="order_date" Type="DateTime" Precision="3" />
           <Property Name="sale_price" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="cost_price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="vat" Type="Double" />
         </EntityType>
         <Association Name="FK__OrderDeta__order__656C112C">
           <End Type="CompanyManagmentModel.Order" Role="Order" Multiplicity="0..1" />
@@ -577,6 +579,7 @@
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="CompanyManagmentModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetails">
+                <ScalarProperty Name="vat" ColumnName="vat" />
                 <ScalarProperty Name="cost_price" ColumnName="cost_price" />
                 <ScalarProperty Name="sale_price" ColumnName="sale_price" />
                 <ScalarProperty Name="order_date" ColumnName="order_date" />

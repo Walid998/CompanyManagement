@@ -1,21 +1,51 @@
 ﻿@model CompanyManagement.Models.OrderViewModel
 
 @{
-    ViewBag.Title = "فاتورة - "+Model.Order.custom_order_id;
+    ViewBag.Title = "فاتورة - " + Model.Order.custom_order_id;
 }
-
-
-<fieldset class="orderfieldset">
-    <div class="row">
-        <div class="col-6">
-            <label class="font-weight-bold">رقم الفاتورة:</label>
-            @Html.DisplayFor(model => model.Order.custom_order_id)
+@if (Model.Order.cancelled == true)
+{
+    <style>
+        .orderfieldset, table {
+            background-color: #dddddd;
+        }
+        .Cancelled{
+            background-color:#be3f3f;
+            border-radius:5px;
+            color:white;
+            text-align:center;
+            padding:5px;
+            font-size:18px;
+        }
+    </style>
+}
+else
+{
+    <style>
+        table {
+            background-color: #fff;
+        }
+    </style>
+}
+@Html.ActionLink("الرجوع الى القائمة", "Index", null, htmlAttributes: new { @style = "display:inline;float:left" })
+<br />
+<hr />
+<fieldset class="orderfieldset" id="firstFieldset">
+    @if (Model.Order.cancelled == true)
+    {
+    <legend class="Cancelled"><i class="fa fa-exclamation-triangle" style="color:#fff"></i> تم إلغاء هذه الفاتورة</legend>
+    }
+        <div class="row">
+            <div class="col-6">
+                <label class="font-weight-bold">رقم الفاتورة:</label>
+                @Html.DisplayFor(model => model.Order.custom_order_id)
+                <input type="hidden" id="OrderId" value="@Model.Order.custom_order_id" />
+            </div>
+            <div class="col-6">
+                <label class="font-weight-bold">نوع الفاتورة:</label>
+                @Html.DisplayFor(model => model.Order.order_type)
+            </div>
         </div>
-        <div class="col-6">
-            <label class="font-weight-bold">نوع الفاتورة:</label>
-            @Html.DisplayFor(model => model.Order.order_type)
-        </div>
-    </div>
     <div class="row">
         <div class="col-6">
             <label class="font-weight-bold">التاريخ:</label>
@@ -27,64 +57,178 @@
         </div>
     </div>
 </fieldset>
-<fieldset class="orderfieldset">
-    
-    <table class="table" style="background-color:#fff">
+<fieldset class="orderfieldset" style="overflow-x: scroll">
+
+    <table class="table">
         <thead>
             <tr>
                 <th>المنتج</th>
                 <th>الكمية</th>
                 <th>وحدة القياس</th>
-                <th>سعر البيع</th>
-                <th>سعر التكلفة</th>
-                <th>discount</th>
+                @if (Model.Order.order_type == "بيع")
+                {
+                    <th>سعر الوحدة</th>
+                    <th>discount</th>
+                    <th>الضرائب</th>
+                }
+                else
+                {
+                    <th>سعر البيع</th>
+                    <th>سعر الشراء</th>
+                    <th>الضرائب</th>
+                }
                 <th>الاجمالى</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.OrderDetails)
             {
-            <tr>
-                <td>@Html.DisplayFor(itemmodel => item.Product.name)</td>
-                <td>@Html.DisplayFor(itemmodel => item.quantity)</td>
-                <td>@Html.DisplayFor(itemmodel => item.Unit_of_Measures.unit_name)</td>
-                <td>@Html.DisplayFor(itemmodel => item.sale_price)</td>
-                <td>@Html.DisplayFor(itemmodel => item.cost_price)</td>
-                <td>@Html.DisplayFor(itemmodel => item.discount)%</td>
-                <td>@Html.DisplayFor(itemmodel => item.total_price)</td>
-            </tr>
+                <tr>
+                    <td>@Html.DisplayFor(itemmodel => item.Product.name)</td>
+                    <td>@Html.DisplayFor(itemmodel => item.quantity)</td>
+                    <td>@Html.DisplayFor(itemmodel => item.Unit_of_Measures.unit_name)</td>
+                    @if (Model.Order.order_type == "بيع")
+                    {
+                        <td>@Html.DisplayFor(itemmodel => item.sale_price)</td>
+                        <td>@Html.DisplayFor(itemmodel => item.discount)%</td>
+                        <td>@Html.DisplayFor(itemmodel => item.vat)%</td>
+                    }
+                    else
+                    {
+                        <td>@Html.DisplayFor(itemmodel => item.sale_price)</td>
+                        <td>@Html.DisplayFor(itemmodel => item.cost_price)</td>
+                        <td>@Html.DisplayFor(itemmodel => item.vat)%</td>
+                    }
+                    <td>@Html.DisplayFor(itemmodel => item.total_price)</td>
+                </tr>
             }
         </tbody>
     </table>
 </fieldset>
 <fieldset class="orderfieldset">
-<dl class="dl-horizontal">
-    <dt>
-        @Html.DisplayNameFor(model => model.Order.total_payment)
-    </dt>
+    <div class="row" id="OrderTail">
+        <div class="col-xl-6">
+            <table>
+                <tr>
+                    @{ var TBV = Model.Order.total_payment - Model.Order.total_vat; }
+                    <td><span id="TotalBeforVat">@TBV</span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td><b>:المبلغ بدون ضرائب</b></td>
+                </tr>
+                <tr>
+                    <td><span id="TotalVat">@Model.Order.total_vat</span></td>
+                    <td><b>:الضرائب</b></td>
+                </tr>
 
-    <dd>
-        @Html.DisplayFor(model => model.Order.total_payment)
-    </dd>
+                <tr style="border-top: 1px solid #cccccc;font-family:'Arial';font-size:20px">
+                    <td><b id="Order_total_payment">@Model.Order.total_payment</b></td>
+                    <td><span>:الاجمالى</span></td>
+                </tr>
+            </table>
 
-    <dt>
-        @Html.DisplayNameFor(model => model.Order.payment_amount)
-    </dt>
+        </div>
+        <div class="col-xl-6" style="border-right: 1px solid #cccccc;">
+            @if (Model.Order.notes != null)
+            {
+                <h5>ملاحظات</h5>
+                <p style="max-width:300px;">- @Model.Order.notes</p>
+            }
+            else
+            {
+                <p>- لا يوجد ملاحظات</p>
+            }
+        </div>
+    </div>
+</fieldset>
 
-    <dd>
-        @Html.DisplayFor(model => model.Order.payment_amount)
-    </dd>
+<hr />
+<div style="text-align:center;color:white">
+    <a class="btn btn-info">طباعة</a>
+    @if (Model.Order.cancelled == true)
+    {
+        <a class="btn btn-warning" onclick="CancelOrderModal()">إقرار</a>
+    }
+    else if (Model.Order.cancelled == null || Model.Order.cancelled == false)
+    {
+        <a class="btn btn-danger" onclick="CancelOrderModal()">إلغاء</a>
+    }
+</div>
+<div class="modal fade" id="CancelOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="direction:rtl;float:right">
+            @if (Model.Order.cancelled == null || Model.Order.cancelled == false)
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد إالغاء الفاتورة - @Model.Order.custom_order_id ؟</h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="CancelForm">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseCancelModal">إلغاء</button>
+                        <button type="submit" class="btn btn-danger">تأكيد</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد إقرار هذه الفاتورة ؟</h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="ConfirmForm">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseCancelModal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">تأكيد</button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CancelForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmCancelOrder();
+        });
+        $("#ConfirmForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmOrder();
+        });
+    });
+    function CancelOrderModal() {
+        $("#CancelOrderModal").appendTo("body").modal("show");
+    }
+    function ConfirmCancelOrder() {
+        var OrderId = $("#OrderId").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: OrderId }),
+            url: "/Orders/CancelOrder",
+            success: function (id) {
+                $("#CloseCancelModal").click();
+                window.location.replace("/Orders/Details/"+id+"");
+            },
+            error: function () {
 
-    <dt>
-        @Html.DisplayNameFor(model => model.Order.rest_amount)
-    </dt>
+            }
+        });
+    }
+    function ConfirmOrder() {
+        var OrderId = $("#OrderId").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: OrderId }),
+            url: "/Orders/ConfirmOrder",
+            success: function (id) {
+                $("#CloseCancelModal").click();
+                window.location.replace("/Orders/Details/" + id + "");
+            },
+            error: function () {
 
-    <dd>
-        @Html.DisplayFor(model => model.Order.rest_amount)
-    </dd>
-
-</dl>
-    </fieldset>
-    <p>
-        @Html.ActionLink("الرجوع الى القائمة", "Index")
-    </p>
+            }
+        });
+    }
+</script>

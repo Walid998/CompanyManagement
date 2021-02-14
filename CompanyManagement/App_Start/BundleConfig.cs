@@ -26,6 +26,8 @@ namespace CompanyManagement
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/Site.css",
+                      "~/Content/simple-sidebar.css",
+                      "~/Content/dashboard.css",
                       "~/Content/font-awesome.css"));
         }
     }

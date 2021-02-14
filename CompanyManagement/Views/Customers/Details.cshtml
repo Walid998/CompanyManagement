@@ -1,18 +1,20 @@
 ﻿@model CompanyManagement.Models.Customer
 
 @{
-    ViewBag.Title = "التفاصيل";
+    ViewBag.Title = "بيانات - " + @Html.DisplayFor(c => c.name);
 }
 
-<h2>تفاصيل عن المورد "@Html.DisplayFor(c => c.name)"</h2>
+
+<h4><i class="fa fa-info-circle"></i> بيانات - <span id="CustomerNameHeader">@Html.DisplayFor(c => c.name)</span></h4>
 <hr />
 <div>
+    <input type="hidden" id="CustomerId" value="@Model.id" />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.name)
         </dt>
 
-        <dd>
+        <dd id="Customer_Name">
             @Html.DisplayFor(model => model.name)
         </dd>
 
@@ -20,7 +22,7 @@
             @Html.DisplayNameFor(model => model.phone)
         </dt>
 
-        <dd>
+        <dd id="Customer_Phone">
             @Html.DisplayFor(model => model.phone)
         </dd>
 
@@ -28,7 +30,7 @@
             @Html.DisplayNameFor(model => model.email)
         </dt>
 
-        <dd>
+        <dd id="Customer_Email">
             @Html.DisplayFor(model => model.email)
         </dd>
 
@@ -36,13 +38,142 @@
             @Html.DisplayNameFor(model => model.type)
         </dt>
 
-        <dd>
+        <dd id="Customer_Type">
             @Html.DisplayFor(model => model.type)
         </dd>
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
+<hr />
+<a class="btn btn-primary" id="EntityControl" onclick="EditCustomerModal()">تعديل</a>
+<a class="btn btn-danger" id="EntityControl" onclick="DeleteCustomerModal()">حذف</a>
+
+
+@*<p>
     @Html.ActionLink("الرجوع الى القائمة", "Index")
-</p>
+</p>*@
+
+<div class="modal fade" id="EditCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">تعديل بيانات - @Model.name</h5>
+            </div>
+            <form id="EditForm">
+                <div class="modal-body col-12 text-center" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="EditCustomer_Name" class="col-12 form-control text-center" placeholder="أسم العميل" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="EditCustomer_Phone" class="col-12 form-control text-center" placeholder="الهاتف" style="direction:ltr" />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="EditCustomer_Email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" required />
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <select name="type" id="EditCustomer_Type" class="col-12 form-control">
+                            <option value="0" selected hidden>اختار نوع العميل -- </option>
+                            <option value="مورد">مورد</option>
+                            <option value="زبون">زبون</option>
+                            <option value="مورد/زبون">مورد / زبون</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseEditCustomerModal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="DeleteCustomerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="direction:rtl;float:right">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد حذف بيانات - @Model.name ؟</h5>
+            </div>
+            <div class="modal-footer">
+                <form id="DeleteForm">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").on("submit", function (e) {
+            e.preventDefault();
+        });
+        $("#EditForm").on("submit", function (e) {
+            ConfirmEditCustomer();
+        })
+        $("#DeleteForm").on("submit", function (e) {
+            ConfirmDeleteCustomer();
+        })
+    });
+    function EditCustomerModal() {
+        $("#EditCustomer_Name").val($("#Customer_Name").text().trim());
+        $("#EditCustomer_Phone").val($("#Customer_Phone").text().trim());
+        $("#EditCustomer_Email").val($("#Customer_Email").text().trim());
+        $("#EditCustomer_Type").val($("#Customer_Type").text().trim());
+        $("#EditCustomerModal").appendTo("body").modal("show");
+    }
+    function DeleteCustomerModal() {
+        $("#DeleteCustomerModal").appendTo("body").modal("show");
+    }
+    function ConfirmEditCustomer() {
+        var Customer = {}
+        Customer.id = $("#CustomerId").val();
+        Customer.name = $("#EditCustomer_Name").val();
+        Customer.phone = $("#EditCustomer_Phone").val();
+        Customer.email = $("#EditCustomer_Email").val();
+        Customer.type = $("#EditCustomer_Type").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/Customers/Edit",
+            data: JSON.stringify(Customer),
+            success: function (data) {
+                $("#CloseEditCustomerModal").click();
+                $("#CustomerNameHeader").text(data.name);
+                $("#Customer_Name").text(data.name);
+                $("#Customer_Phone").text(data.phone);
+                $("#Customer_Email").text(data.email);
+                $("#Customer_Type").text(data.type);
+
+                alert("تم تعديل البيانات بنجاح");
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء تعديل البيانات");
+            }
+        });
+    }
+    function ConfirmDeleteCustomer() {
+        var id = parseInt($("#CustomerId").val());
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            url: "/Customers/Delete",
+            success: function (data) {
+                if (data == true) {
+                    window.location.replace("/Customers/Index");
+                } else {
+                    alert("لا يمكن حذف بيانات هذا المورد لأرتباطه ببيانات اخرى فى النظام");
+                }
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء مسح البيانات");
+            }
+        });
+    }
+</script>

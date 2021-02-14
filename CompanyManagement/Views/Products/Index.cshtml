@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CompanyManagement.Models.Product>
+﻿@model CompanyManagement.Models.ProductViewModel
 
 @{
     ViewBag.Title = "المنتجات";
@@ -12,15 +12,12 @@
         UpdateTargetId = "ContentGrid",
         HttpMethod = "post",
         InsertionMode = InsertionMode.Replace
-    }, new { @style = "display:inline" }))
+    }, new { @style = "display:inline", @id = "searchForm" }))
     {
         @Html.AntiForgeryToken()
         <div class="input-group mb-3">
-            <input type="text" class="form-control SearchInput" name="ProductName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
-            </div>
-            <a href="/Products/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة منتج</a>
+            <input type="text" class="form-control SearchInput" onkeyup="Search()" name="ProductName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+            <a onclick="AddProduct()" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة منتج</a>
         </div>
     }
 </div>
@@ -28,22 +25,22 @@
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.name)
+                @Html.DisplayNameFor(model => model.Product.name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.vat)
+                @Html.DisplayNameFor(model => model.Product.vat)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.code)
+                @Html.DisplayNameFor(model => model.Product.code)
             </th>
             <th></th>
         </tr>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model.Products)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.name)
+                    @Html.ActionLink(item.name, "Details", new { id = item.id })
                 </td>
                 <td>
                     @if (item.vat == null)
@@ -58,14 +55,93 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.code)
                 </td>
-                <td>
-                    @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
-                    @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
-                    @Html.ActionLink("حذف", "Delete", new { id = item.id })
-                </td>
-
             </tr>
         }
 
     </table>
 </div>
+<div class="modal fade" id="AddProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="col-12 modal-title text-center" id="exampleModalLongTitle">إضافة منتج جديد</h5>
+            </div>
+            <form id="AddProductForm">
+                <div class="col-12 modal-body text-center" style="direction:rtl;">
+                    <div class="form-group">
+                        <input type="text" id="ProductModal_Code" class="col-12 form-control text-center" placeholder="كود المنتج" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="ProductModal_Name" class="col-12 form-control text-center" placeholder="اسم المنتج" />
+                    </div>
+                    <div class="form-group">
+                        <select class="col-12 form-control text-center" id="ProductModal_Uom">
+                            @foreach(var item in Model.Uoms)
+                            {
+                                <option value="@item.id">@item.unit_name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="ProductModal_Vat" class="col-12 form-control text-center" placeholder="القيمة المضافة" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseModal_pro">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AddProductForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmAddProduct();
+        });
+    });
+    function Search() {
+        $("#searchForm").submit();
+    }
+    function AddProduct() {
+        $("#AddProductModal").appendTo("body").modal("show");
+    }
+    function ConfirmAddProduct() {
+        Product = {};
+        Product.code = $("#ProductModal_Code").val();
+        Product.name = $("#ProductModal_Name").val();
+        Product.vat = $("#ProductModal_Vat").val();
+        Product.unit_of_measure = $("#ProductModal_Uom").val();
+        $.ajax({
+            async: true,
+            type: "post",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(Product),
+            url: "/Products/CreateProduct",
+            success: function (data) {
+                $("#CloseModal_pro").click();
+                var newProduct =
+                    "<tr><td>"
+                    + "<a href='/Products/Details/" + data.id + "'>" + data.name + "</a>"
+                    + "</td><td>"
+                    + data.vat
+                    + "</td><td>"
+                    + data.code
+                    + "</td></tr>";
+                $("table").append(newProduct);
+                ResetAddProductForm();
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حفظ البيانات");
+            }
+        });
+    }
+    function ResetAddProductForm() {
+        $("#ProductModal_Code").val();
+        $("#ProductModal_Name").val();
+        $("#ProductModal_Vat").val();
+    }
+</script>
