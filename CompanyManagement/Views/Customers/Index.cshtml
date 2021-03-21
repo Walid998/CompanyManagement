@@ -24,7 +24,7 @@
 
 </div>
 
-<div id="ContentGrid" style="overflow-x:scroll">
+<div id="ContentGrid" class="GlobalTable">
     <table class="table">
         <tr>
             <th>
@@ -70,10 +70,10 @@
             <form id="AddCustomerForm">
                 <div class="modal-body" style="direction:rtl">
                     <div class="form-group">
-                        <input type="text" id="Customer_Name" class="col-12 form-control text-center" placeholder="أسم العميل" />
+                        <input type="text" id="Customer_Name" class="col-12 form-control text-center" placeholder="أسم العميل" required/>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="Customer_Phone" class="col-12 form-control text-center" placeholder="الهاتف" style="direction:ltr" />
+                        <input type="text" id="Customer_Phone" class="col-12 form-control text-center" placeholder="الهاتف" style="direction:ltr" required/>
                     </div>
                     <div class="form-group">
                         <input type="email" id="Customer_Email" class="col-12 form-control text-center" placeholder="البريد الالكترونى" required />
@@ -95,7 +95,7 @@
         </div>
     </div>
 </div>
-<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#AddCustomerForm").on("submit", function (e) {
@@ -110,6 +110,11 @@
         $("#AddCustomerModal").appendTo("body").modal("show");
     }
     function ConfirmAddCustomer() {
+        if (!/^\d+$/.test($("#Customer_Phone").val())) {
+            alert("يجب ادخال رقم هاتف صحيح");
+            $("#Customer_Phone").focus();
+            return false;
+        }
         var Customer = {}
         Customer.name = $("#Customer_Name").val();
         Customer.phone = $("#Customer_Phone").val();

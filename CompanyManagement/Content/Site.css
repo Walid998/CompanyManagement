@@ -98,7 +98,7 @@ textarea {
 }
 
 #menu-toggle:hover {
-    color:#626262
+    color:#909090
 }
 /* Content of Layout */
 #content {
@@ -163,4 +163,14 @@ textarea {
 
 #calcolumns {
     background-color: #f5f5f5;
+}
+.GlobalTable{
+    overflow-x:scroll
+}
+label, .bellow-quote {
+    display: block
+}
+
+.form-control {
+    display: inline
 }

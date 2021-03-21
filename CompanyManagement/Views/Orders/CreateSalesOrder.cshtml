@@ -3,6 +3,7 @@
     ViewBag.Title = "فاتورة بيع جديدة";
 }
 <script src="~/Scripts/jquery-3.4.1.js"></script>
+
 <h2>فاتورة بيع جديدة</h2>
 <hr />
 @using (Html.BeginForm())
@@ -15,7 +16,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Order.custom_order_id, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Order.custom_order_id, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Order.custom_order_id, "", htmlAttributes: new { @class = "text-danger", @id = "order_id_validation" })
+                    <span class ="text-danger bellow-quote" id ="order_id_validation" ></span>
                 </div>
             </div>
             <div class="col-xl-4">
@@ -28,8 +29,9 @@
                             <option value="@client.id">@client.name</option>
                         }
                     </select>
-                    @Html.ValidationMessageFor(model => model.Order.customer_id, "", htmlAttributes: new { @class = "text-danger" })
-                    <small><a id="addCustmoer" onclick="AddCustomer()">إضافة عميل جديد <i class="fa fa-plus-circle"></i></a></small>
+                    <small class="bellow-quote">
+                        <a id="addCustmoer" onclick="AddCustomer()">إضافة عميل جديد <i class="fa fa-plus-circle"></i></a>
+                    </small>
                 </div>
             </div>
             <div class="col-xl-4">
@@ -138,9 +140,9 @@
     <fieldset class="orderfieldset">
         <div class="row" id="OrderTail">
             <div class="col-xl-6">
-                <table>
+                <table style="text-align:right">
                     <tr>
-                        <td><span id="TotalBeforVat">0.00</span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                        <td><span id="TotalBeforVat">0.00</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         <td><b>:المبلغ بدون ضرائب</b></td>
                     </tr>
                     <tr>
@@ -148,7 +150,7 @@
                         <td><b>:الضرائب</b></td>
                     </tr>
 
-                    <tr style="border-top: 1px solid #cccccc;font-family:'Arial';font-size:20px">
+                    <tr style="border-top: 1px solid #cccccc;font-family:'Arial';font-size:19px">
                         <td><b id="Order_total_payment">0.00</b></td>
                         <td><span>:الاجمالى</span></td>
                     </tr>

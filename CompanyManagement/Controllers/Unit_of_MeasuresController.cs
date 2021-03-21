@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -18,14 +19,17 @@ namespace CompanyManagement.Controllers
         public ActionResult Index()
         {
             var unit_of_Measures = db.Unit_of_Measures.Include(u => u.UoMCategory);
+            ViewBag.category_id = new SelectList(db.UoMCategories, "id", "name");
+
             return View(unit_of_Measures.ToList());
         }
+
         public PartialViewResult SearchUnits(string UnitName)
         {
             var Units = db.Unit_of_Measures.Where(u => u.unit_name.StartsWith(UnitName)).ToList();
             return PartialView("_Index",Units);
         }
-        // GET: Unit_of_Measures/Details/5
+        
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,93 +41,62 @@ namespace CompanyManagement.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.category_id = new SelectList(
+                                db.UoMCategories, "id", "name", unit_of_Measures.UoMCategory.id);
             return View(unit_of_Measures);
         }
 
-        // GET: Unit_of_Measures/Create
-        public ActionResult Create()
-        {
-            ViewBag.category_id = new SelectList(db.UoMCategories, "id", "name");
-            return View();
-        }
-
-        // POST: Unit_of_Measures/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,unit_name,category_id,unit_type,ratio")] Unit_of_Measures unit_of_Measures)
+        //[ValidateAntiForgeryToken]
+        public JsonResult Create([Bind(Include = "unit_name,category_id,unit_type,ratio")]
+                                Unit_of_Measures unit_of_Measures)
         {
             if (ModelState.IsValid)
             {
+                int? catId = unit_of_Measures.category_id;
+                if(unit_of_Measures.unit_type == "reference" 
+                    && db.UoMCategories.Find(catId).refranse_flag == true)
+                {
+                    return Json("يوجد بالفعل وحدة قياس مرجعية لهذه الفئة");
+                }
                 db.Unit_of_Measures.Add(unit_of_Measures);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(unit_of_Measures);
             }
-
-            ViewBag.category_id = new SelectList(db.UoMCategories, "id", "name", unit_of_Measures.category_id);
-            return View(unit_of_Measures);
+            return null;
         }
 
-        // GET: Unit_of_Measures/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Unit_of_Measures unit_of_Measures = db.Unit_of_Measures.Find(id);
-            if (unit_of_Measures == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.category_id = new SelectList(db.UoMCategories, "id", "name", unit_of_Measures.category_id);
-            ViewBag.unit_type = unit_of_Measures.unit_type;
-            return View(unit_of_Measures);
-        }
-
-        // POST: Unit_of_Measures/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,unit_name,category_id,unit_type,ratio")] Unit_of_Measures unit_of_Measures)
+        //[ValidateAntiForgeryToken]
+        public JsonResult Edit([Bind(Include = "id,unit_name,category_id,unit_type,ratio")]
+                                Unit_of_Measures unit_of_Measures)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(unit_of_Measures).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(unit_of_Measures);
             }
-            ViewBag.category_id = new SelectList(db.UoMCategories, "id", "name", unit_of_Measures.category_id);
-            ViewBag.unit_type = new[] { "اكبر", "المرجعية", "اصغر" };
-            return View(unit_of_Measures);
+            return null;
         }
 
-        // GET: Unit_of_Measures/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Unit_of_Measures unit_of_Measures = db.Unit_of_Measures.Find(id);
-            if (unit_of_Measures == null)
-            {
-                return HttpNotFound();
-            }
-            return View(unit_of_Measures);
-        }
-
-        // POST: Unit_of_Measures/Delete/5
+        
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        //[ValidateAntiForgeryToken]
+        public JsonResult DeleteConfirmed(int id)
         {
             Unit_of_Measures unit_of_Measures = db.Unit_of_Measures.Find(id);
-            db.Unit_of_Measures.Remove(unit_of_Measures);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Unit_of_Measures.Remove(unit_of_Measures);
+                db.SaveChanges();
+                return Json(true);
+            }catch(DbUpdateException ex)
+            {
+                return null;
+            }
+            
         }
 
         protected override void Dispose(bool disposing)

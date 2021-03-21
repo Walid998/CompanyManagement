@@ -3,14 +3,17 @@
 @{
     ViewBag.Title = "فئات وحدات القياس";
 }
-<a href="/Unit_of_Measures/Index" style="display:inline;float:left"><i class="fa fa-caret-square-o-left"></i> الرجوع الى وحدات القياس</a>
+<a href="/Unit_of_Measures/Index" style="left:5%;position:absolute"><i class="fa fa-caret-square-o-left"></i> الرجوع الى وحدات القياس</a>
 
 <h2>فئات وحدات القياس</h2>
-
-<p>
-    @Html.ActionLink("إضافة فئة جديدة", "Create")
-</p>
-<table class="table">
+<div id="Search">
+    <div class="input-group mb-3">
+        <a class="btn btn-secondary" onclick="AddUoMCat()" id="AddNew" style="margin:0px">
+            <i class="fa fa-plus-square"></i> إضافة فئة
+        </a>
+    </div>
+</div>
+<table class="table GlobalTable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.name)
@@ -21,15 +24,188 @@
     @foreach (var item in Model)
     {
         <tr>
+            <td hidden>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.name)
             </td>
             <td>
-                @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
-                @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
-                @Html.ActionLink("حذف", "Delete", new { id = item.id })
+                <a href='#' onclick='EditUoMCat(this)'>تعديل</a> |
+                <a href='#' onclick='RemoveUoMCat(this)'>حذف</a>
             </td>
         </tr>
     }
 
 </table>
+<div class="modal fade" id="Add_UoMCat_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">إضافة فئة جديدة</h5>
+            </div>
+            <form id="AddForm">
+                <div class="modal-body" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="UoMCat_Name" class="col-12 form-control text-center" placeholder="أسم الفئة" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseAdd_UoMCat_Modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="Edit_UoMCat_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">تعديل - <span class="selected_cat"></span></h5>
+            </div>
+            <form id="EditForm">
+                <div class="modal-body" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="EditUoMCat_Name" class="col-12 form-control text-center" placeholder="أسم الفئة" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseEdit_UoMCat_Modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Delete_UoMCat_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="direction:rtl;float:right">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد حذف - <span class="selected_cat"></span> ؟</h5>
+            </div>
+            <div class="modal-footer">
+                <form id="DeleteForm">
+                    <button type="button" class="btn btn-secondary" id="CloseDelete_UoMCat_Modal" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#AddForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmAdd_UoMCat();
+        });
+        $("#EditForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmEdit_UoMCat();
+        });
+        $("#DeleteForm").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmDelete_UoMCat();
+        });
+    });
+    function AddUoMCat() {
+        $("#Add_UoMCat_Modal").appendTo("body").modal("show");
+    }
+    function ConfirmAdd_UoMCat() {
+        var UoMCat = {}
+        UoMCat.name = $("#UoMCat_Name").val();
+        
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/UoMCategories/Create",
+            data: JSON.stringify(UoMCat),
+            success: function (data) {
+                $("#CloseAdd_UoMCat_Modal").click();
+                var newUoMCat =
+                    "<tr><td hidden>"
+                    + data.id
+                    + "</td><td>"
+                    + data.name
+                    + "</td><td>"
+                    + "<a href='#' onclick='EditUoMCat(this)'>تعديل</a> | "
+                    + "<a href='#' onclick='RemoveUoMCat(this)'>حذف</a>"
+                    + "</td></tr>";
+                $("table").append(newUoMCat);
+                ResetAdd_UoMCat_Form();
+                
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حفظ البيانات");
+            }
+        });
+    }
+    function ResetAdd_UoMCat_Form() {
+        $("#UoMCat_Name").val('');
+    }
+    var SelectedRow = null;
+    var SelectedCatId = 0;
+    function EditUoMCat(CatId) {
+        SelectedRow = CatId;
+        SelectedCatId = parseInt($(CatId).closest("tr").find("td:eq(0)").text());
+        let selectedCatName = $(CatId).closest("tr").find("td:eq(1)").text().trim();
+        $("#EditUoMCat_Name").val(selectedCatName);
+        $(".selected_cat").text(selectedCatName);
+        $("#Edit_UoMCat_Modal").appendTo("body").modal("show");
+    }
+    function ConfirmEdit_UoMCat() {
+        var UoMCat = {}
+        UoMCat.id = SelectedCatId;
+        UoMCat.name = $("#EditUoMCat_Name").val();
+
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/UoMCategories/Edit",
+            data: JSON.stringify(UoMCat),
+            success: function (data) {
+                $("#CloseEdit_UoMCat_Modal").click();
+                $(SelectedRow).closest("tr").find("td:eq(1)").text(data.name);
+                ResetEdit_UoMCat_Form();
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حفظ البيانات");
+            }
+        });
+    }
+    function ResetEdit_UoMCat_Form() {
+        $("#EditUoMCat_Name").val('');
+        SelectedRow = null;
+        SelectedCatId = 0;
+    }
+    function RemoveUoMCat(CatId) {
+        SelectedRow = CatId;
+        SelectedCatId = parseInt($(CatId).closest("tr").find("td:eq(0)").text());
+        $(".selected_cat").text($(CatId).closest("tr").find("td:eq(1)").text().trim());
+        $("#Delete_UoMCat_Modal").appendTo("body").modal("show");
+    }
+    function ConfirmDelete_UoMCat() {
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: SelectedCatId }),
+            url: "/UoMCategories/Delete",
+            success: function (data) {
+                if (data == true) {
+                    $("#CloseDelete_UoMCat_Modal").click();
+                    $(SelectedRow).closest("tr").remove();
+                } 
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حذف البيانات");
+            }
+        });
+    }
+</script>

@@ -36,35 +36,37 @@
     }
 </div>
 <hr />
-<table class="table table-bordered">
-    <thead class="thead-light">
-        <tr>
-            <th>رصيد</th>
-            <th>وارد</th>
-            <th>منصرف</th>
-            <th>سعر الوحدة</th>
-            <th>التاريخ</th>
-            <th>البيان</th>
-        </tr>
-    </thead>
-    <tbody id="ContentGrid">
-        @foreach (var tran in Model)
-        {
+<div class="GlobalTable">
+    <table class="table table-bordered">
+        <thead class="thead-light">
             <tr>
-                <td>@tran.balance</td>
-                <td>@tran.income</td>
-                <td>@tran.outcome</td>
-                <td>@tran.sale_price</td>
-                <td>@tran.move_date</td>
-                <td>
-                    <a href="/Orders/Details/@tran.Order.custom_order_id">
-                        @tran.Order.custom_order_id
-                    </a>
-                </td>
+                <th>رصيد</th>
+                <th>وارد</th>
+                <th>منصرف</th>
+                <th>سعر الوحدة</th>
+                <th>التاريخ</th>
+                <th>البيان</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody id="ContentGrid">
+            @foreach (var tran in Model)
+            {
+                <tr>
+                    <td>@tran.balance</td>
+                    <td>@tran.income</td>
+                    <td>@tran.outcome</td>
+                    <td>@tran.sale_price</td>
+                    <td>@tran.move_date</td>
+                    <td>
+                        <a href="/Orders/Details/@tran.Order.custom_order_id">
+                            @tran.Order.custom_order_id
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script type="text/javascript">
     function Search() {

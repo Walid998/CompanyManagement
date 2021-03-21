@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "وحدات القياس";
 }
-<a href="/UoMCategories/Index" style="display:inline;float:left"><i class="fa fa-folder-open"></i> فئات وحدات القياس</a>
+<a href="/UoMCategories/Index" style="left:5%;position:absolute"><i class="fa fa-folder-open"></i> فئات وحدات القياس</a>
 <h2>
     وحدات القياس
 </h2>
@@ -14,22 +14,22 @@
         UpdateTargetId = "ContentGrid",
         HttpMethod = "post",
         InsertionMode = InsertionMode.Replace
-    }, new { @style = "display:inline" }))
+    }, new { @style = "display:inline", @id = "searchForm" }))
     {
         @Html.AntiForgeryToken()
     <div class="input-group mb-3">
-        <input type="text" class="form-control SearchInput" name="UnitName" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
-        <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
-        </div>
-        <a href="/Unit_of_Measures/Create" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> إضافة وحدة قياس</a>
+        <input type="text" class="form-control SearchInput" onkeyup="Search()"
+               name="UnitName" placeholder="بحث .." aria-label=""
+               aria-describedby="basic-addon1">
+        <a class="btn btn-secondary" onclick="AddUoM()" id="AddNew">
+            <i class="fa fa-plus-square"></i> إضافة وحدة قياس</a>
         
     </div>
     }
 
 </div>
 
-<div id="ContentGrid">
+<div id="ContentGrid" class="GlobalTable">
 <table class="table">
     <tr>
         <th>
@@ -44,13 +44,12 @@
         <th>
             @Html.DisplayNameFor(model => model.UoMCategory.name)
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.unit_name)
+            @Html.ActionLink(item.unit_name,"Details",new { id = item.id})
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.unit_type)
@@ -61,13 +60,114 @@
         <td>
             @Html.DisplayFor(modelItem => item.UoMCategory.name)
         </td>
-        <td>
-            @Html.ActionLink("تعديل", "Edit", new { id=item.id }) |
-            @Html.ActionLink("تفاصيل", "Details", new { id=item.id }) |
-            @Html.ActionLink("حذف", "Delete", new { id=item.id })
-        </td>
     </tr>
 }
 
 </table>
 </div>
+<div class="modal fade" id="Add_UoM_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">إضافة وحدة قياس جديدة</h5>
+            </div>
+            <form id="Add_UoM_Form">
+                <div class="modal-body" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="UoM_Name" class="col-12 form-control text-center" placeholder="أسم وحدة القياس" required />
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        @Html.DropDownList("category_id", null, htmlAttributes: new { @class = "col-12 form-control",@id= "UoM_Category" })
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <select name="type" id="UoM_Type" class="col-12 form-control">
+                            <option value="0" selected hidden> -- النوع -- </option>
+                            <option value="smaller">اصغر</option>
+                            <option value="reference">الوحدة المرجعية</option>
+                            <option value="bigger">اكبر</option>
+                        </select>
+                    </div>
+                    <p id="UoM_Type_Validation" style="display:none;color:red"></p>
+                    <div class="form-group">
+                        <input type="number" id="UoM_Ratio" class="col-12 form-control text-center" placeholder="النسبة" required />
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseAdd_UoM_Modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Add_UoM_Form").on("submit", function (e) {
+            e.preventDefault();
+            ConfirmAdd_UoM();
+        });
+        $("#UoM_Type").on("change", function () {
+            if ($("#UoM_Type").val() == "reference") {
+                $("#UoM_Ratio").removeAttr("required");
+                $("#UoM_Ratio").attr("disabled", "disabled");
+            } else {
+                $("#UoM_Ratio").attr("required", "true");
+                $("#UoM_Ratio").removeAttr("disabled");
+            }
+        });
+    });
+    function AddUoM() {
+        $("#Add_UoM_Modal").appendTo("body").modal("show");
+    }
+    function Search() {
+        $("#searchForm").submit();
+    }
+
+    function ConfirmAdd_UoM() {
+        var UoM = {}
+        UoM.unit_name = $("#UoM_Name").val();
+        UoM.category_id = $("#UoM_Category").val();
+        let category_name = $("#UoM_Category option:selected").text();
+        UoM.unit_type = $("#UoM_Type").val();
+        UoM.ratio = $("#UoM_Ratio").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/Unit_of_Measures/Create",
+            data: JSON.stringify(UoM),
+            success: function (data) {
+                if (typeof data === 'string') {
+                    $("#UoM_Type").focus();
+                    alert(data);
+                } else {
+                    $("#CloseAdd_UoM_Modal").click();
+                    var newUoM =
+                        "<tr><td>"
+                        + "<a href='/Unit_of_Measures/Details/" + data.id + "'>" + data.unit_name + "</a>"
+                        + "</td><td>"
+                        + data.unit_type
+                        + "</td><td>"
+                        + data.ratio
+                        + "</td><td>"
+                        + category_name
+                        + "</td></tr>";
+                    $("table").append(newUoM);
+                    ResetAdd_UoM_Form();
+                }
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء حفظ البيانات");
+            }
+        });
+    }
+    function ResetAdd_UoM_Form() {
+        $("#UoM_Name").val('');
+        $("#UoM_Category").val(0);
+        $("#UoM_Type").index(0);
+        $("#UoM_Ratio").val('');
+    }
+</script>

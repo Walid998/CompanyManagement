@@ -2,8 +2,8 @@
 
 @{
     ViewBag.Title = "الفواتير";
+    //Layout = "~/Views/Shared/_Layout2.cshtml";
 }
-
 <h2>الفواتير</h2>
 
 <div id="Search">
@@ -15,16 +15,14 @@
     }, new { @style = "display:inline", @id = "searchForm" }))
     {
         @Html.AntiForgeryToken()
-        <div class="input-group mb-3">
-            <input type="text" class="form-control SearchInput" onkeyup="Search()" name="OrderID" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
-            @*<div class="input-group-prepend">
-                <button class="btn btn-outline-secondary SearchButton" type="submit"><i class="fa fa-search"></i></button>
-            </div>*@
-            <a href="/Orders/CreatePurchaseOrder" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> فاتورة جديدة</a>
-        </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control SearchInput" onkeyup="Search()" name="OrderID" placeholder="بحث .." aria-label="" aria-describedby="basic-addon1">
+        <a href="/Orders/CreatePurchaseOrder" class="btn btn-secondary" id="AddNew"><i class="fa fa-plus-square"></i> فاتورة جديدة</a>
+    </div>
+
     }
 </div>
-<div id="ContentGrid" style="overflow-x:scroll">
+<div id="ContentGrid" class="GlobalTable">
     <table class="table">
         <tr>
             <th>
@@ -54,7 +52,6 @@
             @Html.DisplayFor(modelItem => item.order_type)
         </td>
         <td>
-            @*@Html.DisplayFor(modelItem => item.Customer.name)*@
             <a href="/Customers/Details/@item.Customer.id">@item.Customer.name</a>
         </td>
         <td>
@@ -63,11 +60,6 @@
         <td>
             @Html.DisplayFor(modelItem => item.order_date)
         </td>
-        @*<td>
-            @Html.ActionLink("تعديل", "Edit", new { id = item.id }) |
-            @Html.ActionLink("تفاصيل", "Details", new { id = item.id }) |
-            @Html.ActionLink("حذف", "Delete", new { id = item.id })
-        </td>*@
     </tr>
     }
 

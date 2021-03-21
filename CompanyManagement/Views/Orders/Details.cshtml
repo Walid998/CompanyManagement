@@ -27,9 +27,10 @@ else
         }
     </style>
 }
-@Html.ActionLink("الرجوع الى القائمة", "Index", null, htmlAttributes: new { @style = "display:inline;float:left" })
+@*@Html.ActionLink("الرجوع الى القائمة", "Index", null, htmlAttributes: new { @style = "display:inline;float:left" })
 <br />
-<hr />
+<hr />*@
+<br />
 <fieldset class="orderfieldset" id="firstFieldset">
     @if (Model.Order.cancelled == true)
     {
@@ -108,10 +109,10 @@ else
 <fieldset class="orderfieldset">
     <div class="row" id="OrderTail">
         <div class="col-xl-6">
-            <table>
+            <table style="text-align:right">
                 <tr>
                     @{ var TBV = Model.Order.total_payment - Model.Order.total_vat; }
-                    <td><span id="TotalBeforVat">@TBV</span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td><span id="TotalBeforVat">@TBV</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     <td><b>:المبلغ بدون ضرائب</b></td>
                 </tr>
                 <tr>

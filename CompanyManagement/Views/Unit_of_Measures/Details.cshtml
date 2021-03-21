@@ -1,20 +1,19 @@
 ﻿@model CompanyManagement.Models.Unit_of_Measures
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "بيانات - " + @Html.DisplayFor(u => u.unit_name);
 }
 
-<h2>Details</h2>
-
+<h4><i class="fa fa-info-circle"></i> بيانات - <span id="UnitNameHeader">@Html.DisplayFor(u => u.unit_name)</span></h4>
+<hr />
 <div>
-    <h4>Unit_of_Measures</h4>
-    <hr />
+    <input type="hidden" id="UnitId" value="@Model.id" />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.unit_name)
         </dt>
 
-        <dd>
+        <dd id="UnitName">
             @Html.DisplayFor(model => model.unit_name)
         </dd>
 
@@ -22,7 +21,7 @@
             @Html.DisplayNameFor(model => model.unit_type)
         </dt>
 
-        <dd>
+        <dd id="UnitType">
             @Html.DisplayFor(model => model.unit_type)
         </dd>
 
@@ -30,7 +29,7 @@
             @Html.DisplayNameFor(model => model.ratio)
         </dt>
 
-        <dd>
+        <dd id="UnitRatio">
             @Html.DisplayFor(model => model.ratio)
         </dd>
 
@@ -38,13 +37,136 @@
             @Html.DisplayNameFor(model => model.UoMCategory.name)
         </dt>
 
-        <dd>
+        <dd id="UnitCategory">
             @Html.DisplayFor(model => model.UoMCategory.name)
         </dd>
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("تعديل", "Edit", new { id = Model.id }) |
-    @Html.ActionLink("الرجوع الى القائمة", "Index")
-</p>
+<hr />
+<a class="btn btn-primary" id="EntityControl" onclick="Edit_UoM_Form()">تعديل</a>
+<a class="btn btn-danger" id="EntityControl" onclick="Delete_UoM_Form()">حذف</a>
+
+<div class="modal fade" id="Edit_UoM_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title col-12 text-center">تعديل بيانات - @Model.unit_name</h5>
+            </div>
+            <form id="EditForm">
+                <div class="modal-body" style="direction:rtl">
+                    <div class="form-group">
+                        <input type="text" id="EditUoM_Name" class="col-12 form-control text-center" placeholder="أسم وحدة القياس" required />
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        @Html.DropDownList("category_id", null, htmlAttributes: new { @class = "col-12 form-control", @id = "EditUoM_Category" })
+                    </div>
+                    <div class="form-group" style="text-align:center">
+                        <select name="type" id="EditUoM_Type" class="col-12 form-control">
+                            <option value="0" selected hidden> -- النوع -- </option>
+                            <option value="smaller">اصغر</option>
+                            <option value="reference">الوحدة المرجعية</option>
+                            <option value="bigger">اكبر</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="EditUoM_Ratio" class="col-12 form-control text-center" placeholder="النسبة" required />
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="CloseEdit_UoM_Modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="Delete_UoM_Modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="direction:rtl;float:right">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-exclamation-triangle" style="color:#ff7d00"></i> هل تريد حذف بيانات - @Model.unit_name ؟</h5>
+            </div>
+            <div class="modal-footer">
+                <form id="DeleteForm">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("form").on("submit", function (e) {
+            e.preventDefault();
+        });
+        $("#EditForm").on("submit", function (e) {
+            ConfirmEditUoM();
+        })
+        $("#DeleteForm").on("submit", function (e) {
+            ConfirmDeleteUoM();
+        })
+    });
+    function Edit_UoM_Form() {
+        $("#EditUoM_Name").val($("#UnitName").text().trim());
+        $("#EditUoM_Type").val($("#UnitType").text().trim());
+        $("#EditUoM_Ratio").val($("#UnitRatio").text().trim());
+        $("#Edit_UoM_Modal").appendTo("body").modal("show");
+    }
+    function Delete_UoM_Form() {
+        $("#Delete_UoM_Modal").appendTo("body").modal("show");
+    }
+    function ConfirmEditUoM() {
+        var UoM = {}
+        UoM.id = $("#UnitId").val();
+        UoM.unit_name = $("#EditUoM_Name").val();
+        UoM.category_id = $("#EditUoM_Category").val();
+        let category_name = $("#EditUoM_Category option:selected").text();
+        UoM.unit_type = $("#EditUoM_Type").val();
+        UoM.ratio = $("#EditUoM_Ratio").val();
+        $.ajax({
+            async: true,
+            type: "Post",
+            dataType: "json",
+            contentType: "application/json;charset=utf-8",
+            url: "/Unit_of_Measures/Edit",
+            data: JSON.stringify(UoM),
+            success: function (data) {
+                $("#CloseEdit_UoM_Modal").click();
+                $("#UnitNameHeader").text(data.unit_name);
+                $("#UnitName").text(data.unit_name);
+                $("#UnitType").text(data.unit_type);
+                $("#UnitRatio").text(data.ratio);
+                $("#UnitCategory").text(category_name);
+
+                alert("تم تعديل البيانات بنجاح");
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء تعديل البيانات");
+            }
+        });
+    }
+
+    function ConfirmDeleteUoM() {
+        var id = parseInt($("#UnitId").val());
+        $.ajax({
+            async: true,
+            type: "Post",
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ id: id }),
+            url: "/Unit_of_Measures/Delete",
+            success: function (data) {
+                if (data == true) {
+                    window.location.replace("/Unit_of_Measures/Index");
+                } 
+            },
+            error: function () {
+                alert("حدث مشكلة اثناء مسح البيانات");
+            }
+        });
+    }
+</script>

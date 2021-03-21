@@ -255,6 +255,7 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.easing.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -345,7 +346,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -359,7 +359,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Shared\_Layout2.cshtml" />
+    <Content Include="Views\Shared\_Layout1.cshtml" />
     <Content Include="Views\Customers\Details.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Customers\_Customers.cshtml" />
@@ -372,22 +372,15 @@
     <Content Include="Views\Orders\Details.cshtml" />
     <Content Include="Views\Inventory\AllProductsStock.cshtml" />
     <Content Include="Views\Inventory\ProductTransactions.cshtml" />
-    <Content Include="Views\UoMCategories\Create.cshtml" />
-    <Content Include="Views\UoMCategories\Delete.cshtml" />
-    <Content Include="Views\UoMCategories\Details.cshtml" />
-    <Content Include="Views\UoMCategories\Edit.cshtml" />
     <Content Include="Views\UoMCategories\Index.cshtml" />
-    <Content Include="Views\Unit_of_Measures\Create.cshtml" />
-    <Content Include="Views\Unit_of_Measures\Delete.cshtml" />
     <Content Include="Views\Unit_of_Measures\Details.cshtml" />
-    <Content Include="Views\Unit_of_Measures\Edit.cshtml" />
     <Content Include="Views\Unit_of_Measures\Index.cshtml" />
     <Content Include="Views\Unit_of_Measures\_Index.cshtml" />
     <Content Include="Views\Orders\_OrderModals.cshtml" />
     <Content Include="Views\Orders\CreateSalesOrder.cshtml" />
     <Content Include="Views\Inventory\_Inventory.cshtml" />
     <Content Include="Views\Inventory\_Transactions.cshtml" />
-    <Content Include="Views\Shared\_Layout3.cshtml" />
+    <Content Include="Views\Shared\_Layout2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
